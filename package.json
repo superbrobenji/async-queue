@@ -1,6 +1,6 @@
 {
     "name": "@superbrobenji/conqueue",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retries",
     "repository": {
         "url": "https://github.com/superbrobenji/async-queue",
