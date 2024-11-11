@@ -38,7 +38,7 @@
         "wait"
     ],
     "exports": {
-        "import": "./dist/esm.js",
+        "import": "./dist/index.js",
         "require": "./dist/cjs.js"
     },
     "types": "./dist/index.d.ts",
