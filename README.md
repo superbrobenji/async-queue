@@ -9,7 +9,7 @@
   <a href="https://github.com/superbrobenji/async-queue/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
-  <a href="https://github.com/superbrobenji/async-queue/blob/master/LICENSE" target="_blank">
+  <a href="https://github.com/superbrobenji/async-queue/blob/main/LICENSE" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/github/license/superbrobenji/@superbrobenji/conqueue" />
   </a>
   <a href="https://twitter.com/superbrobenji" target="_blank">
@@ -30,7 +30,11 @@ npm i @superbrobenji/conqueue
 ## Usage
 
 ```sh
-https://github.com/superbrobenji/async-queue/blob/main/docs/package.md
+import Queue from 'superbrobenji/conqueue
+const queue = new Queue()
+queue.add(() => new Promise((resolve) => setTimeOut(resolve, 200)), (res, err) => {
+  //handle err or result
+})
 ```
 
 ## Run tests
@@ -39,17 +43,17 @@ https://github.com/superbrobenji/async-queue/blob/main/docs/package.md
 npm run test
 ```
 
-## Author
+## author
 
-👤 **Benjamin Swanepoel**
+👤 **benjamin swanepoel**
 
-* Twitter: [@superbrobenji](https://twitter.com/superbrobenji)
-* Github: [@superbrobenji](https://github.com/superbrobenji)
-* LinkedIn: [@Benjamin Swanepoel](https://linkedin.com/in/Benjamin Swanepoel)
+- Twitter: [@superbrobenji](https://twitter.com/superbrobenji)
+- Github: [@superbrobenji](https://github.com/superbrobenji)
+- LinkedIn: [@benjamin-swanepoel](https://linkedin.com/in/benjamin-swanepoel)
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/superbrobenji/async-queue/issues). You can also take a look at the [contributing guide](https://github.com/superbrobenji/async-queue/blob/master/CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/superbrobenji/async-queue/issues). You can also take a look at the [contributing guide](https://github.com/superbrobenji/async-queue/blob/main/CONTRIBUTING.md).
 
 ## Show your support
 
@@ -57,8 +61,10 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-Copyright © 2024 [Benjamin Swanepoel](https://github.com/superbrobenji).<br />
-This project is [MIT](https://github.com/superbrobenji/async-queue/blob/master/LICENSE) licensed.
+Copyright © 2024 [benjamin swanepoel](https://github.com/superbrobenji).<br />
+This project is [MIT](https://github.com/superbrobenji/async-queue/blob/main/LICENSE) licensed.
 
-***
+---
+
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+
