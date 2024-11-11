@@ -11,15 +11,17 @@
     "main": "index.js",
     "type": "module",
     "files": [
+        "./dist/index.d.ts",
+        "./dist/cjs.d.ts",
         "./dist/index.js",
         "./dist/cjs.js",
         "./dist/index.js.map",
         "./dist/cjs.js.map"
     ],
     "scripts": {
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --collectCoverage",
-        "jsdoc": "jsdoc -a all -c jsdoc.json -r -R README.md src/index.js -d docs/jsdoc && jsdoc2md --files src/index.js > docs/package.md",
-        "build": "node build.js"
+        "test": "bun test --coverage",
+        "jsdoc": "bunx jsdoc -a all -c jsdoc.json -r -R README.md src/index.js -d docs/jsdoc && jsdoc2md --files src/index.js > docs/package.md",
+        "build": "bun run test && tsc -p tsconfig.json && bun build.js"
     },
     "keywords": [
         "queue",
@@ -38,16 +40,22 @@
         "wait"
     ],
     "exports": {
-        "import": "./dist/index.js",
-        "require": "./dist/cjs.js"
+        "import": {
+            "default": "./dist/index.js",
+            "types": "./dist/index.d.tjs"
+        },
+        "require": {
+            "defaults": "./dist/cjs.js",
+            "types": "./dist/cjs.d.ts"
+        }
     },
     "types": "./dist/index.d.ts",
     "author": "superbrobenji",
     "license": "MIT",
     "devDependencies": {
+        "@types/bun": "latest",
+        "bun": "^1.1.34",
         "docdash": "^2.0.2",
-        "esbuild": "^0.24.0",
-        "esbuild-plugin-d.ts": "^1.3.1",
         "jest": "^29.7.0",
         "jsdoc": "^4.0.4",
         "jsdoc-to-markdown": "^9.0.5",
