@@ -30,9 +30,9 @@ npm i @superbrobenji/conqueue
 ## Usage
 
 ```sh
-import Queue from 'superbrobenji/conqueue
+import Queue from 'superbrobenji/conqueue'
 const queue = new Queue()
-queue.add(() => new Promise((resolve) => setTimeOut(resolve, 200)), (res, err) => {
+queue.add(() => new Promise((resolve) => setTimeout(resolve, 200)), (res, err) => {
   //handle err or result
 })
 ```
@@ -67,4 +67,3 @@ This project is [MIT](https://github.com/superbrobenji/async-queue/blob/main/LIC
 ---
 
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
-
