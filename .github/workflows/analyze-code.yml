@@ -30,14 +30,15 @@ name: analyse code
 
 on:
   pull_request:
-    branches: ["develop", "main"]
+    branches:
+      - develop
   workflow_dispatch:
 
 permissions:
   pull-requests: read # allows SonarCloud to decorate PRs with analysis results
 
 jobs:
-  Setup:
+  Analyze:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
