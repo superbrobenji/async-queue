@@ -5,6 +5,7 @@ on:
       - develop
     types:
       - reopened
+      - edited
       - labeled
       - unlabeled
 jobs:
