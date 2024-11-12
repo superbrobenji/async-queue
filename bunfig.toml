@@ -1,0 +1,3 @@
+[test]
+coverageReporter  = [ "lcov"]  # default ["text"]
+coverageDir = "coverage"  # default "coverage"
