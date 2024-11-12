@@ -1,7 +1,7 @@
-<h1 align="center">Welcome to @superbrobenji/conqueue 👋</h1>
+<h1 align="center">Welcome to conq 👋</h1>
 <p>
-  <a href="https://www.npmjs.com/package/@superbrobenji/conqueue" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/@superbrobenji/conqueue.svg">
+  <a href="https://www.npmjs.com/package/conq" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/conq.svg">
   </a>
   <a href="https://github.com/superbrobenji/async-queue/blob/main/docs/package.md" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
@@ -10,7 +10,7 @@
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
   <a href="https://github.com/superbrobenji/async-queue/blob/main/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/github/license/superbrobenji/@superbrobenji/conqueue" />
+    <img alt="License: MIT" src="https://img.shields.io/github/license/superbrobenji/conq" />
   </a>
   <a href="https://twitter.com/superbrobenji" target="_blank">
     <img alt="Twitter: superbrobenji" src="https://img.shields.io/twitter/follow/superbrobenji.svg?style=social" />
@@ -19,18 +19,18 @@
 
 > A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retries
 
-### 🏠 [Homepage](https://www.npmjs.com/package/@superbrobenji/conqueue)
+### 🏠 [Homepage](https://www.npmjs.com/package/conq)
 
 ## Install
 
 ```sh
-npm i @superbrobenji/conqueue
+npm i conq
 ```
 
 ## Usage
 
 ```sh
-import Queue from 'superbrobenji/conqueue'
+import Queue from 'conq'
 const queue = new Queue()
 queue.add(() => new Promise((resolve) => setTimeout(resolve, 200)), (res, err) => {
   //handle err or result
