@@ -44,15 +44,15 @@ jobs:
     steps:
       - name: checkout branch
         uses: actions/checkout@v4
-      - name: setup bun
-        uses: oven-sh/setup-bun@v2
       - name: install dependencies
+        uses: oven-sh/setup-bun@v2
         run: bun i
   Test:
     needs: Setup
     runs-on: ubuntu-latest
     steps:
       - name: test code and get coverage
+        uses: oven-sh/setup-bun@v2
         run: bun run test
   Analysis:
     needs: Test
