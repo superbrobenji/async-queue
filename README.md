@@ -17,7 +17,7 @@
   </a>
 </p>
 
-> s A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retries
+> A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retry
 
 ### 🏠 [Homepage](https://www.npmjs.com/package/asyncrify)
 
