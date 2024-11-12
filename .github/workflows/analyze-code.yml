@@ -29,10 +29,8 @@
 name: analyse code
 
 on:
-  push:
-    branches: ["dev"]
   pull_request:
-    branches: ["dev", "main"]
+    branches: ["develop", "main"]
   workflow_dispatch:
 
 permissions:
