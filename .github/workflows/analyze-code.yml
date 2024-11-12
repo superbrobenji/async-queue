@@ -42,9 +42,20 @@ jobs:
   Setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: superbrobenji/async-queue/actions/workflows/pre-build.yml@main
-  Analysis:
+      - name: checkout branch
+        uses: actions/checkout@v4
+      - name: setup bun
+        uses: oven-sh/setup-bun@v2
+      - name: install dependencies
+        run: bun i
+  Test:
     needs: Setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: test code and get coverage
+        run: bun run test
+  Analysis:
+    needs: Test
     runs-on: ubuntu-latest
     steps:
       - name: Analyze with SonarCloud

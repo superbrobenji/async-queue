@@ -5,17 +5,24 @@ on:
     types: [created]
 
 jobs:
+  pre-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout branch
+        uses: actions/checkout@v4
+      - name: setup bun
+        uses: oven-sh/setup-bun@v2
+      - name: install dependencies
+        run: bun i
+      - name: test code and get coverage
+        run: bun run test
   build:
+    needs: pre-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun run build
-  version-bump:
-    needs: pre-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
@@ -25,7 +32,6 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
