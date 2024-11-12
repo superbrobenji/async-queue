@@ -1,7 +1,7 @@
-<h1 align="center">Welcome to conq 👋</h1>
+<h1 align="center">Welcome to asyncrify 👋</h1>
 <p>
-  <a href="https://www.npmjs.com/package/conq" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/conq.svg">
+  <a href="https://www.npmjs.com/package/asyncrify" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/asyncrify.svg">
   </a>
   <a href="https://github.com/superbrobenji/async-queue/blob/main/docs/package.md" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
@@ -10,27 +10,27 @@
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
   <a href="https://github.com/superbrobenji/async-queue/blob/main/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/github/license/superbrobenji/conq" />
+    <img alt="License: MIT" src="https://img.shields.io/github/license/superbrobenji/asyncrify" />
   </a>
   <a href="https://twitter.com/superbrobenji" target="_blank">
     <img alt="Twitter: superbrobenji" src="https://img.shields.io/twitter/follow/superbrobenji.svg?style=social" />
   </a>
 </p>
 
-> A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retries
+> s A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retries
 
-### 🏠 [Homepage](https://www.npmjs.com/package/conq)
+### 🏠 [Homepage](https://www.npmjs.com/package/asyncrify)
 
 ## Install
 
 ```sh
-npm i conq
+npm i asyncrify
 ```
 
 ## Usage
 
 ```sh
-import Queue from 'conq'
+import Queue from 'asyncrify'
 const queue = new Queue()
 queue.add(() => new Promise((resolve) => setTimeout(resolve, 200)), (res, err) => {
   //handle err or result
