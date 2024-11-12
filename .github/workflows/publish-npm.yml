@@ -10,8 +10,7 @@ jobs:
     steps:
       - name: checkout branch
         uses: actions/checkout@v4
-      - name: setup bun
-        uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
       - name: install dependencies
         run: bun i
       - name: test code and get coverage

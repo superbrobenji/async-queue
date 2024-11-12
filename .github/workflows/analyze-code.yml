@@ -29,10 +29,8 @@
 name: analyse code
 
 on:
-  push:
-    branches: ["dev"]
   pull_request:
-    branches: ["dev", "main"]
+    branches: ["develop", "main"]
   workflow_dispatch:
 
 permissions:
@@ -42,16 +40,16 @@ jobs:
   Setup:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout branch
-        uses: actions/checkout@v4
-      - name: setup bun
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
       - name: install dependencies
         run: bun i
   Test:
     needs: Setup
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
       - name: test code and get coverage
         run: bun run test
   Analysis:
