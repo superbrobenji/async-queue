@@ -10,7 +10,7 @@
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
   <a href="https://github.com/superbrobenji/async-queue/blob/main/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/github/license/superbrobenji/asyncrify" />
+    <img alt="License: MIT" src="https://img.shields.io/github/license/superbrobenji/async-queue" />
   </a>
   <a href="https://twitter.com/superbrobenji" target="_blank">
     <img alt="Twitter: superbrobenji" src="https://img.shields.io/twitter/follow/superbrobenji.svg?style=social" />
