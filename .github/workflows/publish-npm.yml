@@ -8,8 +8,7 @@ jobs:
   pre-build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - name: install dependencies
         run: bun i
