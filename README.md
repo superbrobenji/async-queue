@@ -45,7 +45,7 @@ npm run test
 
 ## author
 
-👤 **benjamin swanepoel**
+👤 **Benjamin Swanepoel**
 
 - Twitter: [@superbrobenji](https://twitter.com/superbrobenji)
 - Github: [@superbrobenji](https://github.com/superbrobenji)
