@@ -12,8 +12,8 @@ jobs:
     name: "Check PR Labels"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: mheap/github-action-required-labels@v1
+      - uses: actions/checkout@v4
+      - uses: mheap/github-action-required-labels@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
