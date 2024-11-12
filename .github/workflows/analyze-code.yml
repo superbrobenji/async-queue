@@ -26,11 +26,11 @@
 # Feel free to take a look at our documentation (https://docs.sonarcloud.io/getting-started/github/)
 # or reach out to our community forum if you need some help (https://community.sonarsource.com/c/help/sc/9)
 
-name: build checks
+name: analyse code
 
 on:
   push:
-    branches: ["dev", "main"]
+    branches: ["dev"]
   pull_request:
     branches: ["dev", "main"]
   workflow_dispatch:
@@ -39,18 +39,15 @@ permissions:
   pull-requests: read # allows SonarCloud to decorate PRs with analysis results
 
 jobs:
-  Analysis:
+  Setup:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-      - name: install dependencies
-        run: bun i
-      - name: test code and get coverage
-        run: bun run test
+      - uses: superbrobenji/async-queue/actions/workflows/pre-build.yml@main
+  Analysis:
+    needs: Setup
+    runs-on: ubuntu-latest
+    steps:
       - name: Analyze with SonarCloud
-
         # You can pin the exact commit or the version.
         # uses: SonarSource/sonarcloud-github-action@v2.2.0
         uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216

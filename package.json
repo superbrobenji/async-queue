@@ -21,7 +21,7 @@
     "scripts": {
         "test": "bun test --coverage",
         "jsdoc": "bunx jsdoc -a all -c jsdoc.json -r -R README.md src/index.js -d docs/jsdoc && jsdoc2md --files src/index.js > docs/package.md",
-        "build": "bun run test && tsc -p tsconfig.json && bun build.js"
+        "build": "tsc -p tsconfig.json && bun build.js"
     },
     "keywords": [
         "queue",
