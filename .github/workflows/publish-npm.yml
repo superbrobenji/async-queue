@@ -14,10 +14,6 @@ jobs:
         run: bun i
       - name: test code and get coverage
         run: bun run test
-  build:
-    needs: pre-build
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun run build
