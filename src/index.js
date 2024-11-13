@@ -48,6 +48,24 @@ export default class AsyncQueue {
      *
      * @memberof AsyncQueue
      * @param {number} maxRetries - The max amount of promises to run concurrently
+     *@example
+     * const queue = new Queue()
+     *
+     * //setting retries to 3
+     * queue.setRetries(3)
+     *
+     * const pets = () =>{
+     *   return new Promise((resolve, reject) =>{
+     *     setTimeout(reject('rejected'), 100)
+     *   })
+     * }
+     *
+     * const callback = (res, err) => {
+     *   console.log(err.message) // output: 'max retries reached'
+     *   console.log(err.cause) //  output: ['rejected', 'rejected', 'rejected']
+     * }
+     *
+     * queue.add(pets, callback)
      */
     setRetries(maxRetries) {
         AsyncQueue.#inputValidation(maxRetries, "number", true);
@@ -93,8 +111,8 @@ export default class AsyncQueue {
      * @todo add support for array input
      * @param {Object} res - The response from the promise
      * @param {Object} err - The error that the promise threw.
-     * @param {string=} [err.message] - When retry is enabled, it will return a message. Mandatory on retry
-     * @param {Array=} [err.cause] - When retry is enabled, it will return an array of errors for each retry. Mandatory on retry
+     * @param {string=} [err.message] - When retry is enabled, it will return a message.
+     * @param {Array=} [err.cause] - When retry is enabled, it will return an array of errors for each retry.
      * @example
      *
      * //setting retries to 3
