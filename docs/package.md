@@ -74,6 +74,26 @@ By default the queue will not retry a failed promise.
 | --- | --- | --- |
 | maxRetries | <code>number</code> | The max amount of promises to run concurrently |
 
+**Example**  
+```js
+const queue = new Queue()
+
+//setting retries to 3
+queue.setRetries(3)
+
+const pets = () =>{
+  return new Promise((resolve, reject) =>{
+    setTimeout(reject('rejected'), 100)
+  })
+}
+
+const callback = (res, err) => {
+  console.log(err.message) // output: 'max retries reached'
+  console.log(err.cause) //  output: ['rejected', 'rejected', 'rejected']
+}
+
+queue.add(pets, callback)
+```
 <a name="AsyncQueue.setPromiseTimeout"></a>
 
 ### AsyncQueue.setPromiseTimeout(timeout)
@@ -160,8 +180,8 @@ queue.add(pets, callback)
 | --- | --- | --- |
 | res | <code>Object</code> | The response from the promise |
 | err | <code>Object</code> | The error that the promise threw. |
-| [err.message] | <code>string</code> | When retry is enabled, it will return a message. Mandatory on retry |
-| [err.cause] | <code>Array</code> | When retry is enabled, it will return an array of errors for each retry. Mandatory on retry |
+| [err.message] | <code>string</code> | When retry is enabled, it will return a message. |
+| [err.cause] | <code>Array</code> | When retry is enabled, it will return an array of errors for each retry. |
 
 **Example**  
 ```js
