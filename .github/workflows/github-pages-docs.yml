@@ -1,9 +1,8 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: "Deploy static content to Pages"
 
 on:
   # Runs on pushes targeting the default branch
-  push:
   release:
     types: [created]
   workflow_dispatch:
