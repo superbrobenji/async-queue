@@ -19,7 +19,7 @@
 
 > A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retry
 
-### 🏠 [Homepage](https://www.npmjs.com/package/asyncrify)
+### 🏠 [Homepage](https://superbrobenji.github.io/async-queue/index.html)
 
 ## Install
 

@@ -38,7 +38,7 @@ jobs:
         with:
           ref: develop
       - name: Merge main -> develop
-        run: git merge main --force
+        run: git merge main
       - id: set-version
         name: Output version change
         run: npm pkg get version
