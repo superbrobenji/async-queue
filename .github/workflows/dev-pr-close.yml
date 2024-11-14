@@ -33,13 +33,12 @@ jobs:
         run: npm version patch
       - name: Git push version bump
         run: git push origin main --follow-tags --force
-      - name: Merge main -> develop
-        uses: devmasx/merge-branch@master
+      - name: checkout develop
+        uses: actions/checkout@v4
         with:
-          type: now
-          from_branch: main
-          target_branch: develop
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ref: develop
+      - name: Merge main -> develop
+        run: git merge main --force
       - id: set-version
         name: Output version change
         run: npm pkg get version

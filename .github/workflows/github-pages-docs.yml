@@ -32,8 +32,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - name: generate new docs
+      - name: install dependencies
         run: bun i
+      - name: generate new docs
         run: bun run jsdoc
       - name: Setup Pages
         uses: actions/configure-pages@v5
