@@ -1,8 +1,8 @@
-name: "Dev - PR Open"
+name: "Main - PR Open"
 on:
   pull_request:
     branches:
-      - dev
+      - main
     types:
       - opened
 jobs:
@@ -14,5 +14,5 @@ jobs:
     steps:
       - uses: mshick/add-pr-comment@v2
         with:
-          message: Please set a label relating to your PR type. `bug`, `documentation`, `enhancement` or `task`.
+          message: Please set a versioning label of either `major`, `minor`, or `patch` to the pull request.
           repo-token: ${{ secrets.GITHUB_TOKEN }}
