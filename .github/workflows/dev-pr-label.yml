@@ -10,7 +10,7 @@ on:
       - unlabeled
 jobs:
   check_labels:
-    name: "Check PR Labels"
+    name: "Check Dev PR Labels"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
