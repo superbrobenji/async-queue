@@ -37,7 +37,9 @@
         "throttle",
         "concurrency",
         "concurrent",
-        "wait"
+        "wait",
+        "max",
+        "limit"
     ],
     "exports": {
         "import": {
