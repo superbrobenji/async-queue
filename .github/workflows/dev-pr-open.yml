@@ -7,7 +7,7 @@ on:
       - opened
 jobs:
   add_comment:
-    name: "Add Comment"
+    name: "Add Dev Comment"
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
