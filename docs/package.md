@@ -8,7 +8,7 @@
 ## Typedefs
 
 <dl>
-<dt><a href="#callback">callback</a> : <code>function</code></dt>
+<dt><a href="#returnCallback">returnCallback</a> ⇒ <code>void</code></dt>
 <dd></dd>
 <dt><a href="#promiseFunction">promiseFunction</a> ⇒ <code>Promise.&lt;any&gt;</code></dt>
 <dd></dd>
@@ -21,7 +21,7 @@
 
 * [AsyncQueue](#AsyncQueue) : <code>object</code>
     * [.module.exports](#AsyncQueue.module.exports)
-        * [new module.exports(maxConcurrency)](#new_AsyncQueue.module.exports_new)
+        * [new module.exports([maxConcurrency])](#new_AsyncQueue.module.exports_new)
     * [.setMaxConcurrency(maxConcurrency)](#AsyncQueue.setMaxConcurrency)
     * [.setRetries(maxRetries)](#AsyncQueue.setRetries)
     * [.setPromiseTimeout(timeout)](#AsyncQueue.setPromiseTimeout)
@@ -33,13 +33,13 @@
 **Kind**: static class of [<code>AsyncQueue</code>](#AsyncQueue)  
 <a name="new_AsyncQueue.module.exports_new"></a>
 
-#### new module.exports(maxConcurrency)
+#### new module.exports([maxConcurrency])
 Create a Queue
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| maxConcurrency | <code>number</code> | The max amount of promises to run concurrently |
+| [maxConcurrency] | <code>number</code> | The max amount of promises to run concurrently |
 
 **Example**  
 ```js
@@ -143,7 +143,7 @@ Takes in a function that returns a Promise
 | Param | Type | Description |
 | --- | --- | --- |
 | fn | [<code>promiseFunction</code>](#promiseFunction) | The function that returns a promise you want to add to the queue |
-| callback | [<code>callback</code>](#callback) | The function that is executed when the promise settles |
+| callback | [<code>returnCallback</code>](#returnCallback) | The function that is executed when the promise settles |
 
 **Example**  
 ```js
@@ -167,9 +167,9 @@ const callback = (res, err) => {
 //Adding the promise to the queue
 queue.add(pets, callback)
 ```
-<a name="callback"></a>
+<a name="returnCallback"></a>
 
-## callback : <code>function</code>
+## returnCallback ⇒ <code>void</code>
 **Kind**: global typedef  
 **Todo**
 
@@ -180,8 +180,6 @@ queue.add(pets, callback)
 | --- | --- | --- |
 | res | <code>Object</code> | The response from the promise |
 | err | <code>Object</code> | The error that the promise threw. |
-| [err.message] | <code>string</code> | When retry is enabled, it will return a message. |
-| [err.cause] | <code>Array</code> | When retry is enabled, it will return an array of errors for each retry. |
 
 **Example**  
 ```js
