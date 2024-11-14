@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/superbrobenji/async-queue" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="AsyncQueue.module.exports.html">AsyncQueue.module.exports</a></li></ul><h3>Namespaces</h3><ul><li><a href="AsyncQueue.html">AsyncQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.add">add</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxConcurrency">setMaxConcurrency</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setPromiseTimeout">setPromiseTimeout</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setRetries">setRetries</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#callback">callback</a></li><li><a href="global.html#promiseFunction">promiseFunction</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/superbrobenji/async-queue" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="AsyncQueue.module.exports.html">AsyncQueue.module.exports</a></li></ul><h3>Namespaces</h3><ul><li><a href="AsyncQueue.html">AsyncQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.add">add</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxConcurrency">setMaxConcurrency</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setPromiseTimeout">setPromiseTimeout</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setRetries">setRetries</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#promiseFunction">promiseFunction</a></li><li><a href="global.html#returnCallback">returnCallback</a></li></ul>
     
 </nav>
 
@@ -134,7 +134,121 @@
 
     
 
-    <h4 class="name" id="callback"><span class="type-signature"></span>callback<span class="signature">(res, err)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="promiseFunction"><span class="type-signature"></span>promiseFunction<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;any>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line134">line 134</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>const pets = () =>{
+  return new Promise((resolve) =>{
+    setTimeout(resolve, 100)
+  })
+}</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The promise you want to add to the queue</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;any></span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id="returnCallback"><span class="type-signature"></span>returnCallback<span class="signature">(res, err)</span><span class="type-signature"> &rarr; {void}</span></h4>
 
     
 
@@ -286,199 +400,12 @@ queue.add(pets, callback)</code></pre>
 
             
 
-            <td class="description last"><p>The error that the promise threw.</p>
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>When retry is enabled, it will return a message.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>cause</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>When retry is enabled, it will return an array of errors for each retry.</p></td>
+            <td class="description last"><p>The error that the promise threw.</p></td>
         </tr>
 
     
     </tbody>
 </table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-                
-
-    
-
-    <h4 class="name" id="promiseFunction"><span class="type-signature"></span>promiseFunction<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;any>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line135">line 135</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-examples">Example</h5>
-    
-    <pre class="prettyprint"><code>const pets = () =>{
-  return new Promise((resolve) =>{
-    setTimeout(resolve, 100)
-  })
-}</code></pre>
-
-
 
 
 
@@ -498,10 +425,6 @@ queue.add(pets, callback)</code></pre>
 <h5 class="h5-returns">Returns:</h5>
 
         
-<div class="param-desc">
-    <p>The promise you want to add to the queue</p>
-</div>
-
 
 
 <dl class="param-type">
@@ -510,7 +433,7 @@ queue.add(pets, callback)</code></pre>
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;any></span>
+<span class="param-type">void</span>
 
 
 
@@ -539,7 +462,7 @@ queue.add(pets, callback)</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Wed Nov 13 2024 15:57:06 GMT+0200 (South Africa Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Thu Nov 14 2024 23:29:04 GMT+0200 (South Africa Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
