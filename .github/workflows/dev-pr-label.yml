@@ -2,7 +2,7 @@ name: "Dev - PR Label Checker"
 on:
   pull_request:
     branches:
-      - main
+      - develop
     types:
       - reopened
       - edited
