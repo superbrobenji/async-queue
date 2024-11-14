@@ -76,9 +76,9 @@ export default class AsyncQueue {
      * Set the max amount of time a promise can take to settle
      * By default the queue will not monitor the promise time to settle
      *
-     * @todo implement abort controller to kill promise when timeout is reached
      * @memberof AsyncQueue
      * @param {number} timeout - The max amount of time in ms a promise can take to settle
+     * @todo implement abort controller to kill promise when timeout is reached
      * @example
      * const queue = new Queue()
      *
@@ -106,13 +106,12 @@ export default class AsyncQueue {
     }
 
     /**
-     * @callback callback
+     * @callback returnCallback
      *
-     * @todo add support for array input
      * @param {Object} res - The response from the promise
      * @param {Object} err - The error that the promise threw.
-     * @param {string=} [err.message] - When retry is enabled, it will return a message.
-     * @param {Array=} [err.cause] - When retry is enabled, it will return an array of errors for each retry.
+     * @return {void}
+     * @todo add support for array input
      * @example
      *
      * //setting retries to 3
@@ -150,7 +149,7 @@ export default class AsyncQueue {
      *
      * @memberof AsyncQueue
      * @param {promiseFunction} fn - The function that returns a promise you want to add to the queue
-     * @param {callback} callback - The function that is executed when the promise settles
+     * @param {returnCallback} callback - The function that is executed when the promise settles
      * @example
      * const queue = new Queue()
      *
