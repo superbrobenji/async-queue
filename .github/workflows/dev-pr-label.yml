@@ -1,4 +1,4 @@
-name: "Dev - PR Label Checker"
+name: "Main - PR Label Checker"
 on:
   pull_request:
     branches:

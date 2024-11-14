@@ -1,4 +1,4 @@
-name: "Dev - PR Close"
+name: "Main - PR Close"
 on:
   pull_request:
     branches:
