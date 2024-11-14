@@ -2,9 +2,10 @@ name: "Dev - PR Close"
 on:
   pull_request:
     branches:
-      - develop
+      - main
     types:
       - closed
+  workflow_dispatch:
 jobs:
   merge_pr:
     name: "PR Merged"
@@ -31,7 +32,7 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'patch')
         run: npm version patch
       - name: Git push version bump
-        run: git push origin develop --follow-tags --force
+        run: git push origin main --follow-tags --force
       - id: set-version
         name: Output version change
         run: npm pkg get version
