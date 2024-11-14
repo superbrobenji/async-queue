@@ -1,8 +1,8 @@
-name: "Dev - PR Label Checker"
+name: "Main - PR Label Checker"
 on:
   pull_request:
     branches:
-      - develop
+      - main
     types:
       - reopened
       - edited
@@ -10,7 +10,7 @@ on:
       - unlabeled
 jobs:
   check_labels:
-    name: "Check Dev PR Labels"
+    name: "Check PR Labels"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,4 +20,4 @@ jobs:
         with:
           mode: exactly
           count: 1
-          labels: "bug, documentation, enhancement, task"
+          labels: "major, minor, patch"
