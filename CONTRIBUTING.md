@@ -6,6 +6,7 @@ Thank you for considering contributing to `Asyncrify`! Whether you're fixing a b
 
 - [Getting Started](#getting-started)
 - [Code of Conduct](#code-of-conduct)
+- [Security Policy](#security-policy)
 - [Issues](#issues)
   - [Bug Reports](#bug-reports)
   - [Feature Requests](#feature-requests)
@@ -25,6 +26,10 @@ Thank you for considering contributing to `Asyncrify`! Whether you're fixing a b
 ## Code of Conduct
 
 Please review our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming and respectful community for all contributors.
+
+## Security Policy
+
+For security-related issues, please refer to our [Security Policy](SECURITY.md) and follow the instructions for reporting vulnerabilities responsibly.
 
 ## Issues
 
