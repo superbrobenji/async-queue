@@ -6,6 +6,7 @@ const option = {
     minify: true,
     drop: ["console"],
 };
+
 (async () => {
     await Bun.build({
         format: "esm",

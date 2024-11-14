@@ -1,8 +1,8 @@
-name: "Dev - PR Open"
+name: "Main - PR Open"
 on:
   pull_request:
     branches:
-      - develop
+      - main
     types:
       - opened
 jobs:

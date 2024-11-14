@@ -3,9 +3,10 @@ name: release
 on:
   release:
     types: [created]
+  workflow_dispatch:
 
 jobs:
-  pre-build:
+  Release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -1,18 +1,9 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: "[BUG] - issue title here"
+about: Report a bug to help us improve `asyncrify`
+title: "[BUG] - Brief description of the issue"
 labels: bug
-assignees: ''
-
----
-
----
-name: Bug report
-about: Report a bug to help us improve `async-queue`
-title: "[BUG] Brief description of the issue"
-labels: bug
-assignees: ''
+assignees: ""
 ---
 
 ## Description
@@ -22,6 +13,7 @@ A clear and concise description of what the bug is.
 ## Steps to Reproduce
 
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Run '...'
 3. See error
@@ -37,6 +29,7 @@ A description of what actually happens instead of the expected behavior.
 ## Environment
 
 Please provide the following details:
+
 - **async-queue version**: (e.g., v1.0.0)
 - **Node.js version**: (e.g., v20.0.0)
 - **Operating System**: (e.g., Windows, macOS, Ubuntu)
