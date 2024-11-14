@@ -26,6 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: "Check file existence"
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "dist/index.js, dist/cjs.js, dist/cjs.js.map, dist/index.d.ts, dist/index.d.ts.map, dist/index.js.map "
+          fail: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20
