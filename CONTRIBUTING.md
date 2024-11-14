@@ -5,6 +5,7 @@ Thank you for considering contributing to `Asyncrify`! Whether you're fixing a b
 ## Table of Contents
 
 - [Getting Started](#getting-started)
+- [Code of Conduct](#code-of-conduct)
 - [Issues](#issues)
   - [Bug Reports](#bug-reports)
   - [Feature Requests](#feature-requests)
@@ -20,6 +21,10 @@ Thank you for considering contributing to `Asyncrify`! Whether you're fixing a b
 1. **Clone** the repository.
 2. **Create a branch** off `develop` for your work (e.g., `feature/add-logging` or `bugfix/fix-crash`).
 3. Make changes, following the coding standards and contributing best practices below.
+
+## Code of Conduct
+
+Please review our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming and respectful community for all contributors.
 
 ## Issues
 
