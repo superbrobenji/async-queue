@@ -1,6 +1,6 @@
 {
     "name": "asyncrify",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "description": "A simple queue for executing promises concurrently. You can set timeouts, max concurrency as well as retries",
     "repository": {
         "url": "https://github.com/superbrobenji/async-queue",
