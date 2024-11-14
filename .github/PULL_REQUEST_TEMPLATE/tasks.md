@@ -1,7 +1,7 @@
 ---
 name: Task
 about: Submit a general task, refactoring, or chore
-title: "[TASK] Brief description of the task"
+title: "[TASK] - Brief description of the task"
 labels: task
 assignees: ""
 ---

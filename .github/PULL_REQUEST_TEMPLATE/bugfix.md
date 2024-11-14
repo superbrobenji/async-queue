@@ -1,7 +1,7 @@
 ---
 name: Bug Fix
 about: Submit a bug fix
-title: "[BUGFIX] Brief description of the fix"
+title: "[BUGFIX] - Brief description of the fix"
 labels: bug
 assignees: ""
 ---

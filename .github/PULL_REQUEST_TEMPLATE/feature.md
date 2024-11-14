@@ -1,7 +1,7 @@
 ---
 name: New Feature
 about: Propose a new feature or enhancement
-title: "[FEATURE] Brief description of the feature"
+title: "[FEATURE] - Brief description of the feature"
 labels: enhancement
 assignees: ""
 ---

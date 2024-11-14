@@ -1,7 +1,7 @@
 ---
 name: Documentation Update
 about: Propose changes to documentation (README, comments, etc.)
-title: "[DOCS] Brief description of the update"
+title: "[DOCS] - Brief description of the update"
 labels: documentation
 assignees: ""
 ---

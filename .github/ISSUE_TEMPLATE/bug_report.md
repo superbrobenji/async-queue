@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report a bug to help us improve `asyncrify`
-title: "[BUG] Brief description of the issue"
+title: "[BUG] - Brief description of the issue"
 labels: bug
 assignees: ""
 ---
