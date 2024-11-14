@@ -16,7 +16,7 @@ export default class AsyncQueue {
      * Create a Queue
      *
      * @memberof AsyncQueue
-     * @param {number} maxConcurrency - The max amount of promises to run concurrently
+     * @param {number=} [maxConcurrency] - The max amount of promises to run concurrently
      * @example
      *
      * //to define a queue with a default length of 5
