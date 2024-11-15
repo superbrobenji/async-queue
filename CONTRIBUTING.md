@@ -19,7 +19,7 @@ Thank you for considering contributing to `Asyncrify`! Whether you're fixing a b
 
 ## Getting Started
 
-1. **Clone** the repository.
+1. **Fork** the repository and clone it locally.
 2. **Create a branch** off `develop` for your work (e.g., `feature/add-logging` or `bugfix/fix-crash`).
 3. Make changes, following the coding standards and contributing best practices below.
 
