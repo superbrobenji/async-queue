@@ -286,10 +286,10 @@ describe("AsyncQueue class", () => {
             );
         });
 
-        test("should retry on error if maxRetries are specified and return if o it resolved on the last retry ", (done) => {
+        test("should retry on error if maxRetries are specified and return if it resolved on a retry ", (done) => {
             let runCount = 0;
             const retries = 3;
-            const resolvedRetry = 3;
+            let resolvedRetry = 2;
 
             queue.setMaxRetries(retries);
             const counter = () => {
@@ -300,54 +300,28 @@ describe("AsyncQueue class", () => {
                     res(enums.RESOLVED);
                 }
             };
-
-            queue.add(
-                testAsync(false, counter, false, promiseCallback),
-                (res) => {
-                    try {
-                        expect(runCount).toEqual(resolvedRetry);
-                        expect(res).toEqual(enums.RESOLVED);
-                        done();
-                    } catch (err) {
+            const create = (fn) => {
+                queue.add(
+                    testAsync(false, counter, false, promiseCallback),
+                    (res) => {
+                        try {
+                            expect(runCount).toEqual(resolvedRetry);
+                            expect(res).toEqual(enums.RESOLVED);
+                            console.log(resolvedRetry);
+                            resolvedRetry = 3;
+                            fn && fn();
+                            !fn && done();
+                        } catch (err) {
+                            done(err);
+                        }
+                    },
+                    (err) => {
                         done(err);
-                    }
-                },
-                (err) => {
-                    done(err);
-                },
-            );
-        });
-
-        test("should retry on error if maxRetries are specified and return if o it resolved on a retry", (done) => {
-            let runCount = 0;
-            const retries = 3;
-            const resolvedRetry = 2;
-
-            queue.setMaxRetries(retries);
-            const counter = () => {
-                runCount++;
-            };
-            const promiseCallback = (res) => {
-                if (runCount === resolvedRetry) {
-                    res(enums.RESOLVED);
-                }
+                    },
+                );
             };
 
-            queue.add(
-                testAsync(false, counter, false, promiseCallback),
-                (res) => {
-                    try {
-                        expect(runCount).toEqual(resolvedRetry);
-                        expect(res).toEqual(enums.RESOLVED);
-                        done();
-                    } catch (err) {
-                        done(err);
-                    }
-                },
-                (err) => {
-                    done(err);
-                },
-            );
+            create(create);
         });
 
         test("should retry on error if maxRetries are specified for the specified amount of times and the errors are aborts", (done) => {
