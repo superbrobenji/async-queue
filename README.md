@@ -33,13 +33,13 @@ npm i asyncrify
 import Queue from 'asyncrify'
 const queue = new Queue()
 queue.add(() => new Promise(
-(resolve) => setTimeout(resolve, 200)),
-(res) => {
-  //handle result
-},
-(err) => {
-  //handle err
-})
+  (resolve) => setTimeout(resolve, 200)),
+  (res) => {
+    //handle result
+  },
+  (err) => {
+    //handle err
+  })
 ```
 
 ## Run tests
