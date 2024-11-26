@@ -32,6 +32,7 @@ on:
   pull_request:
     branches:
       - develop
+      - main
 
 permissions:
   pull-requests: read # allows SonarCloud to decorate PRs with analysis results
