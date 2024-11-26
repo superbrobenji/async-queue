@@ -6,11 +6,11 @@
  *
  */
 const inputValidation = (input, type, required) => {
-    if (required && !input) {
-        throw new Error("input is required");
+    if (required && !input && input !== 0) {
+        throw new SyntaxError("input is required");
     }
     if (input && typeof input !== type) {
-        throw new Error(`input must be a ${type}`);
+        throw new TypeError(`input must be a ${type}`);
     }
 };
 export default inputValidation;

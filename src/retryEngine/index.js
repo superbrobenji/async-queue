@@ -79,9 +79,10 @@ export default class RetryEngine {
             });
         } else {
             callback(
-                new Error("max retries reached", {
-                    cause: this.#errorsOnRetries.get(fn),
-                }),
+                new AggregateError(
+                    this.#errorsOnRetries.get(fn),
+                    "max retries reached",
+                ),
             );
         }
     }

@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/superbrobenji/async-queue" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="AsyncQueue.module.exports.html">AsyncQueue.module.exports</a></li></ul><h3>Namespaces</h3><ul><li><a href="AsyncQueue.html">AsyncQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.add">add</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxConcurrency">setMaxConcurrency</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxRetries">setMaxRetries</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setPromiseTimeout">setPromiseTimeout</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#errCallback">errCallback</a></li><li><a href="global.html#promiseFunction">promiseFunction</a></li><li><a href="global.html#resCallback">resCallback</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/superbrobenji/async-queue" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="AsyncQueue.module.exports.html">AsyncQueue.module.exports</a></li></ul><h3>Namespaces</h3><ul><li><a href="AsyncQueue.html">AsyncQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.add">add</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxConcurrency">setMaxConcurrency</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxRetries">setMaxRetries</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setPromiseTimeout">setPromiseTimeout</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#abortHandler">abortHandler</a></li><li><a href="global.html#errCallback">errCallback</a></li><li><a href="global.html#promiseFunction">promiseFunction</a></li><li><a href="global.html#resCallback">resCallback</a></li></ul>
     
 </nav>
 
@@ -80,7 +80,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line5">line 5</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line4">line 4</a>
     </li></ul></dd>
     
 
@@ -194,7 +194,7 @@ Takes in a function that returns a Promise</p></li></ul></dd>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line226">line 226</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -401,7 +401,7 @@ queue.add(pets, callback, error)</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line55">line 55</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -537,7 +537,7 @@ By default the queue will not retry a failed promise.</p></li></ul></dd>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line89">line 89</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line85">line 85</a>
     </li></ul></dd>
     
 
@@ -601,7 +601,7 @@ const callback = (res) => {
 
 const errCallback = ( err) => {
   console.log(err.message) // output: 'max retries reached'
-  console.log(err.cause) //  output: ['rejected', 'rejected', 'rejected']
+  console.log(err.errors) //  output: list of errors
 }
 
 queue.add(pets, callback, errCallback)</code></pre>
@@ -692,7 +692,8 @@ queue.add(pets, callback, errCallback)</code></pre>
     
     <dt class="tag-description">Description:</dt>
     <dd class="tag-description"><ul class="dummy"><li><p>Set the max amount of time a promise can take to settle
-By default the queue will not monitor the promise time to settle</p></li></ul></dd>
+By default the queue will not monitor the promise time to settle
+a signal must be handled in the promise for the timeout to abort the promise</p></li></ul></dd>
     
 
     
@@ -758,8 +759,11 @@ By default the queue will not monitor the promise time to settle</p></li></ul></
 queue.setPromiseTimeout(100)
 
 //function returns the promise we want to add to queue
-const pets = () =>{
-  return new Promise((resolve) =>{
+const pets = (signal) =>{
+  return new Promise((resolve, reject) =>{
+  signal.addEventListener("abort", () => {
+   reject("Aborted")
+  }
     setTimeout(resolve, 500) //note that the timeout in the promise is larger than the set promise timeout
   })
 }
@@ -867,7 +871,7 @@ queue.add(pets, callback, errCallback)</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Nov 26 2024 12:40:27 GMT+0200 (South Africa Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Nov 26 2024 17:05:18 GMT+0200 (South Africa Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

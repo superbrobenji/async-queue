@@ -5,6 +5,14 @@
 <dd></dd>
 </dl>
 
+## Constants
+
+<dl>
+<dt><a href="#abortHandler">abortHandler</a></dt>
+<dd><p>abort handler for handling aborts in your promise</p>
+</dd>
+</dl>
+
 ## Typedefs
 
 <dl>
@@ -12,7 +20,7 @@
 <dd></dd>
 <dt><a href="#errCallback">errCallback</a> ⇒ <code>void</code></dt>
 <dd></dd>
-<dt><a href="#promiseFunction">promiseFunction</a> ⇒ <code>Promise.&lt;any&gt;</code></dt>
+<dt><a href="#promiseFunction">promiseFunction</a> ⇒ <code>Promise.&lt;unknown&gt;</code></dt>
 <dd></dd>
 </dl>
 
@@ -23,7 +31,7 @@
 
 * [AsyncQueue](#AsyncQueue) : <code>object</code>
     * [.module.exports](#AsyncQueue.module.exports)
-        * [new module.exports([maxConcurrency], maxRetries, timeout)](#new_AsyncQueue.module.exports_new)
+        * [new module.exports([maxConcurrency], [maxRetries], [timeout])](#new_AsyncQueue.module.exports_new)
     * [.setMaxConcurrency(maxConcurrency)](#AsyncQueue.setMaxConcurrency)
     * [.setMaxRetries(maxRetries)](#AsyncQueue.setMaxRetries)
     * [.setPromiseTimeout(timeout)](#AsyncQueue.setPromiseTimeout)
@@ -35,15 +43,15 @@
 **Kind**: static class of [<code>AsyncQueue</code>](#AsyncQueue)  
 <a name="new_AsyncQueue.module.exports_new"></a>
 
-#### new module.exports([maxConcurrency], maxRetries, timeout)
+#### new module.exports([maxConcurrency], [maxRetries], [timeout])
 Create a Queue
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | [maxConcurrency] | <code>number</code> | The max amount of promises to run concurrently |
-| maxRetries | <code>number</code> | The max amount of promises to run concurrently |
-| timeout | <code>number</code> | The max amount of time in ms a promise can take to settle |
+| [maxRetries] | <code>number</code> | The max amount of promises to run concurrently |
+| [timeout] | <code>number</code> | The max amount of time in ms a promise can take to settle |
 
 **Example**  
 ```js
@@ -97,7 +105,7 @@ const callback = (res) => {
 
 const errCallback = ( err) => {
   console.log(err.message) // output: 'max retries reached'
-  console.log(err.cause) //  output: ['rejected', 'rejected', 'rejected']
+  console.log(err.errors) //  output: list of errors
 }
 
 queue.add(pets, callback, errCallback)
@@ -107,6 +115,7 @@ queue.add(pets, callback, errCallback)
 ### AsyncQueue.setPromiseTimeout(timeout)
 Set the max amount of time a promise can take to settle
 By default the queue will not monitor the promise time to settle
+a signal must be handled in the promise for the timeout to abort the promise
 
 **Kind**: static method of [<code>AsyncQueue</code>](#AsyncQueue)  
 **Todo**
@@ -126,8 +135,11 @@ const queue = new Queue()
 queue.setPromiseTimeout(100)
 
 //function returns the promise we want to add to queue
-const pets = () =>{
-  return new Promise((resolve) =>{
+const pets = (signal) =>{
+  return new Promise((resolve, reject) =>{
+  signal.addEventListener("abort", () => {
+   reject("Aborted")
+  }
     setTimeout(resolve, 500) //note that the timeout in the promise is larger than the set promise timeout
   })
 }
@@ -181,6 +193,36 @@ const error = (err) => {
 
 //Adding the promise to the queue
 queue.add(pets, callback, error)
+```
+<a name="abortHandler"></a>
+
+## abortHandler
+abort handler for handling aborts in your promise
+
+**Kind**: global constant  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reject | <code>RejectFunction</code> | the reject function of the promise |
+
+**Example**  
+```js
+const promise = (signal) => {
+ return new Promise((resolve, reject) => {
+     abortHandler(signal, reject);
+
+     setTimeout(resolve, 5000, "resolved");
+ });
+};
+
+const callback = (res) {
+  // handle res here
+}
+const errHandler = (err) {
+  console.log(err.message) //output: "Aborted"
+}
+
+queue.add(promise, callback, errHandler)
 ```
 <a name="resCallback"></a>
 
@@ -242,13 +284,21 @@ queue.add(pets, callback, errorCallback)
 ```
 <a name="promiseFunction"></a>
 
-## promiseFunction ⇒ <code>Promise.&lt;any&gt;</code>
+## promiseFunction ⇒ <code>Promise.&lt;unknown&gt;</code>
 **Kind**: global typedef  
-**Returns**: <code>Promise.&lt;any&gt;</code> - The promise you want to add to the queue  
+**Returns**: <code>Promise.&lt;unknown&gt;</code> - The promise you want to add to the queue  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [signal] | <code>AbortSignal</code> | The signal for the abort controller for the timeout to abort the promise |
+
 **Example**  
 ```js
-const pets = () =>{
-  return new Promise((resolve) =>{
+const pets = (signal) =>{
+  return new Promise((resolve, reject) =>{
+  signal.addEventListener("abort", () => {
+   reject("Aborted")
+  }
     setTimeout(resolve, 100)
   })
 }
