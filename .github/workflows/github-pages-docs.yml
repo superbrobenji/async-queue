@@ -10,6 +10,7 @@ on:
 permissions:
   contents: read
   pages: write
+  deployments: write
   id-token: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
@@ -38,7 +39,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
           path: "./docs/jsdoc"
       - name: Deploy to GitHub Pages
         id: deployment
