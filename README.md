@@ -32,8 +32,10 @@ npm i asyncrify
 ```sh
 import Queue from 'asyncrify'
 const queue = new Queue()
-queue.add(() => new Promise((resolve) => setTimeout(resolve, 200)), (res, err) => {
-  //handle err or result
+queue.add(() => new Promise((resolve) => setTimeout(resolve, 200)), (res) => {
+  //handle result
+}, (err) => {
+  //handle err
 })
 ```
 
