@@ -5,12 +5,22 @@
 <dd></dd>
 </dl>
 
+## Constants
+
+<dl>
+<dt><a href="#abortHandler">abortHandler</a></dt>
+<dd><p>abort handler for handling aborts in your promise</p>
+</dd>
+</dl>
+
 ## Typedefs
 
 <dl>
-<dt><a href="#returnCallback">returnCallback</a> ⇒ <code>void</code></dt>
+<dt><a href="#resCallback">resCallback</a> ⇒ <code>void</code></dt>
 <dd></dd>
-<dt><a href="#promiseFunction">promiseFunction</a> ⇒ <code>Promise.&lt;any&gt;</code></dt>
+<dt><a href="#errCallback">errCallback</a> ⇒ <code>void</code></dt>
+<dd></dd>
+<dt><a href="#promiseFunction">promiseFunction</a> ⇒ <code>Promise.&lt;unknown&gt;</code></dt>
 <dd></dd>
 </dl>
 
@@ -21,11 +31,11 @@
 
 * [AsyncQueue](#AsyncQueue) : <code>object</code>
     * [.module.exports](#AsyncQueue.module.exports)
-        * [new module.exports([maxConcurrency])](#new_AsyncQueue.module.exports_new)
+        * [new module.exports([maxConcurrency], [maxRetries], [timeout])](#new_AsyncQueue.module.exports_new)
     * [.setMaxConcurrency(maxConcurrency)](#AsyncQueue.setMaxConcurrency)
-    * [.setRetries(maxRetries)](#AsyncQueue.setRetries)
+    * [.setMaxRetries(maxRetries)](#AsyncQueue.setMaxRetries)
     * [.setPromiseTimeout(timeout)](#AsyncQueue.setPromiseTimeout)
-    * [.add(fn, callback)](#AsyncQueue.add)
+    * [.add(fn, callback, callback)](#AsyncQueue.add)
 
 <a name="AsyncQueue.module.exports"></a>
 
@@ -33,13 +43,15 @@
 **Kind**: static class of [<code>AsyncQueue</code>](#AsyncQueue)  
 <a name="new_AsyncQueue.module.exports_new"></a>
 
-#### new module.exports([maxConcurrency])
+#### new module.exports([maxConcurrency], [maxRetries], [timeout])
 Create a Queue
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | [maxConcurrency] | <code>number</code> | The max amount of promises to run concurrently |
+| [maxRetries] | <code>number</code> | The max amount of promises to run concurrently |
+| [timeout] | <code>number</code> | The max amount of time in ms a promise can take to settle |
 
 **Example**  
 ```js
@@ -62,9 +74,9 @@ Set the max amount of promises to run concurrently after queue initialization
 | --- | --- | --- |
 | maxConcurrency | <code>number</code> | The max amount of promises to run concurrently |
 
-<a name="AsyncQueue.setRetries"></a>
+<a name="AsyncQueue.setMaxRetries"></a>
 
-### AsyncQueue.setRetries(maxRetries)
+### AsyncQueue.setMaxRetries(maxRetries)
 Set the max amount of times a promise can be retried after a failure
 By default the queue will not retry a failed promise.
 
@@ -87,18 +99,23 @@ const pets = () =>{
   })
 }
 
-const callback = (res, err) => {
-  console.log(err.message) // output: 'max retries reached'
-  console.log(err.cause) //  output: ['rejected', 'rejected', 'rejected']
+const callback = (res) => {
+  //do something with data
 }
 
-queue.add(pets, callback)
+const errCallback = ( err) => {
+  console.log(err.message) // output: 'max retries reached'
+  console.log(err.errors) //  output: list of errors
+}
+
+queue.add(pets, callback, errCallback)
 ```
 <a name="AsyncQueue.setPromiseTimeout"></a>
 
 ### AsyncQueue.setPromiseTimeout(timeout)
 Set the max amount of time a promise can take to settle
 By default the queue will not monitor the promise time to settle
+a signal must be handled in the promise for the timeout to abort the promise
 
 **Kind**: static method of [<code>AsyncQueue</code>](#AsyncQueue)  
 **Todo**
@@ -118,23 +135,31 @@ const queue = new Queue()
 queue.setPromiseTimeout(100)
 
 //function returns the promise we want to add to queue
-const pets = () =>{
-  return new Promise((resolve) =>{
+const pets = (signal) =>{
+  return new Promise((resolve, reject) =>{
+  signal.addEventListener("abort", () => {
+   reject("Aborted")
+  }
     setTimeout(resolve, 500) //note that the timeout in the promise is larger than the set promise timeout
   })
 }
 
-//the callback that is ran on the settlement of the promise
-const callback = (res, err) => {
+//the callback that is ran on the resolution of the promise
+const callback = (res ) => {
+  //do something with data
+}
+
+//the callback that is ran on the rejection of the promise
+const errCallback = (err) => {
 console.log(err) //output: "Request timed out"
 }
 
 //Adding the promise to the queue
-queue.add(pets, callback)
+queue.add(pets, callback, errCallback)
 ```
 <a name="AsyncQueue.add"></a>
 
-### AsyncQueue.add(fn, callback)
+### AsyncQueue.add(fn, callback, callback)
 Add an function to the queue
 Takes in a function that returns a Promise
 
@@ -143,7 +168,8 @@ Takes in a function that returns a Promise
 | Param | Type | Description |
 | --- | --- | --- |
 | fn | [<code>promiseFunction</code>](#promiseFunction) | The function that returns a promise you want to add to the queue |
-| callback | [<code>returnCallback</code>](#returnCallback) | The function that is executed when the promise settles |
+| callback | [<code>resCallback</code>](#resCallback) | The function that is executed when the promise resolves |
+| callback | [<code>errCallback</code>](#errCallback) | The function that is executed when the promise rejects |
 
 **Example**  
 ```js
@@ -157,19 +183,50 @@ const pets = () =>{
 }
 
 //the callback that is ran on the settlement of the promise
-const callback = (res, err) => {
-  if(err){
-    throw new error(err)
-  }
+const callback = (res) => {
   //do something with response
 }
 
-//Adding the promise to the queue
-queue.add(pets, callback)
-```
-<a name="returnCallback"></a>
+const error = (err) => {
+  throw new Error(err)
+}
 
-## returnCallback ⇒ <code>void</code>
+//Adding the promise to the queue
+queue.add(pets, callback, error)
+```
+<a name="abortHandler"></a>
+
+## abortHandler
+abort handler for handling aborts in your promise
+
+**Kind**: global constant  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reject | <code>RejectFunction</code> | the reject function of the promise |
+
+**Example**  
+```js
+const promise = (signal) => {
+ return new Promise((resolve, reject) => {
+     abortHandler(signal, reject);
+
+     setTimeout(resolve, 5000, "resolved");
+ });
+};
+
+const callback = (res) {
+  // handle res here
+}
+const errHandler = (err) {
+  console.log(err.message) //output: "Aborted"
+}
+
+queue.add(promise, callback, errHandler)
+```
+<a name="resCallback"></a>
+
+## resCallback ⇒ <code>void</code>
 **Kind**: global typedef  
 **Todo**
 
@@ -179,35 +236,69 @@ queue.add(pets, callback)
 | Param | Type | Description |
 | --- | --- | --- |
 | res | <code>Object</code> | The response from the promise |
-| err | <code>Object</code> | The error that the promise threw. |
 
 **Example**  
 ```js
-//setting retries to 3
-queue.setRetries(3)
+const pets = () =>{
+  return new Promise((resolve, reject) =>{
+    setTimeout(resolve('finished'), 100)
+  })
+}
 
+const callback = (res) => {
+ //do something with res
+}
+
+queue.add(pets, callback)
+```
+<a name="errCallback"></a>
+
+## errCallback ⇒ <code>void</code>
+**Kind**: global typedef  
+**Todo**
+
+- [ ] add support for array input
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| err | <code>Error</code> | The response from the promise |
+
+**Example**  
+```js
 const pets = () =>{
   return new Promise((resolve, reject) =>{
     setTimeout(reject('rejected'), 100)
   })
 }
 
-const callback = (res, err) => {
-  console.log(err.message) // output: 'max retries reached'
-  console.log(err.cause) //  output: ['rejected', 'rejected', 'rejected']
+const callback = (res) => {
+ //do something with res
 }
 
-queue.add(pets, callback)
+const errorCallback = (err) => {
+ //do something with error
+}
+
+queue.add(pets, callback, errorCallback)
 ```
 <a name="promiseFunction"></a>
 
-## promiseFunction ⇒ <code>Promise.&lt;any&gt;</code>
+## promiseFunction ⇒ <code>Promise.&lt;unknown&gt;</code>
 **Kind**: global typedef  
-**Returns**: <code>Promise.&lt;any&gt;</code> - The promise you want to add to the queue  
+**Returns**: <code>Promise.&lt;unknown&gt;</code> - The promise you want to add to the queue  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [signal] | <code>AbortSignal</code> | The signal for the abort controller for the timeout to abort the promise |
+
 **Example**  
 ```js
-const pets = () =>{
-  return new Promise((resolve) =>{
+const pets = (signal) =>{
+  return new Promise((resolve, reject) =>{
+  signal.addEventListener("abort", () => {
+   reject("Aborted")
+  }
     setTimeout(resolve, 100)
   })
 }
