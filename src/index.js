@@ -1,7 +1,6 @@
 "use strict";
 import RetryEngine from "./retryEngine";
 import inputValidation from "./shared/inputValidation";
-import TimeoutEngine from "./timeoutEngine";
 /**
  * @namespace AsyncQueue
  */
@@ -10,22 +9,19 @@ export default class AsyncQueue {
     #queue = new Set();
     #running = 0;
     #maxConcurrency = 5;
+    #timeout = 0;
     /**
      * @type {RetryEngine| null}
      */
     #retryEngine = null;
-    /**
-     * @type {TimeoutEngine}
-     */
-    #timeoutEngine = new TimeoutEngine(0);
 
     /**
      * Create a Queue
      *
      * @memberof AsyncQueue
      * @param {number=} [maxConcurrency] - The max amount of promises to run concurrently
-     * @param {number} maxRetries - The max amount of promises to run concurrently
-     * @param {number} timeout - The max amount of time in ms a promise can take to settle
+     * @param {number=} maxRetries - The max amount of promises to run concurrently
+     * @param {number=} timeout - The max amount of time in ms a promise can take to settle
      * @example
      *
      * //to define a queue with a default length of 5
@@ -43,7 +39,7 @@ export default class AsyncQueue {
         if (maxRetries) {
             this.#retryEngine = new RetryEngine(maxRetries);
         }
-        if (timeout) this.#timeoutEngine.setPromiseTimeout(timeout);
+        if (timeout) this.#timeout = timeout;
     }
 
     /**
@@ -81,7 +77,7 @@ export default class AsyncQueue {
      *
      * const errCallback = ( err) => {
      *   console.log(err.message) // output: 'max retries reached'
-     *   console.log(err.cause) //  output: ['rejected', 'rejected', 'rejected']
+     *   console.log(err.errors) //  output: list of errors
      * }
      *
      * queue.add(pets, callback, errCallback)
@@ -98,6 +94,7 @@ export default class AsyncQueue {
     /**
      * Set the max amount of time a promise can take to settle
      * By default the queue will not monitor the promise time to settle
+     * a signal must be handled in the promise for the timeout to abort the promise
      *
      * @memberof AsyncQueue
      * @param {number} timeout - The max amount of time in ms a promise can take to settle
@@ -109,8 +106,11 @@ export default class AsyncQueue {
      * queue.setPromiseTimeout(100)
      *
      * //function returns the promise we want to add to queue
-     * const pets = () =>{
-     *   return new Promise((resolve) =>{
+     * const pets = (signal) =>{
+     *   return new Promise((resolve, reject) =>{
+     *   signal.addEventListener("abort", () => {
+     *    reject("Aborted")
+     *   }
      *     setTimeout(resolve, 500) //note that the timeout in the promise is larger than the set promise timeout
      *   })
      * }
@@ -130,7 +130,7 @@ export default class AsyncQueue {
      */
     setPromiseTimeout(timeout) {
         inputValidation(timeout, "number", true);
-        this.#timeoutEngine.setPromiseTimeout(timeout);
+        this.#timeout = timeout;
     }
 
     /**
@@ -184,10 +184,14 @@ export default class AsyncQueue {
     /**
      * @callback promiseFunction
      *
-     * @returns {Promise<any>} The promise you want to add to the queue
+     * @param {AbortSignal=} signal - The signal for the abort controller for the timeout to abort the promise
+     * @returns {Promise<unknown>} The promise you want to add to the queue
      * @example
-     * const pets = () =>{
-     *   return new Promise((resolve) =>{
+     * const pets = (signal) =>{
+     *   return new Promise((resolve, reject) =>{
+     *   signal.addEventListener("abort", () => {
+     *    reject("Aborted")
+     *   }
      *     setTimeout(resolve, 100)
      *   })
      * }
@@ -237,8 +241,10 @@ export default class AsyncQueue {
     }
 
     #promiseRunner(fn, callback, errorCallback) {
-        const promises = this.#timeoutEngine.promiseBuilder(fn);
-        Promise.race(promises)
+        const promise = fn(
+            this.#timeout > 0 ? AbortSignal.timeout(this.#timeout) : null,
+        );
+        promise
             .then(callback)
             .catch((err) => {
                 this.#errorHandler(err, fn, errorCallback, callback);
@@ -260,7 +266,7 @@ export default class AsyncQueue {
     #errorHandler(err, fn, errCallback, callback) {
         if (this.#retryEngine && this.#retryEngine.maxRetries > 0) {
             this.#retryEngine.handleErrorWithRetryEngine(fn, err, (maxRetriesErr) => {
-                if (maxRetriesErr) {
+                if (maxRetriesErr && errCallback) {
                     errCallback(maxRetriesErr);
                 } else {
                     this.add(fn, callback, errCallback);
@@ -271,3 +277,36 @@ export default class AsyncQueue {
         }
     }
 }
+
+/**
+ * abort handler for handling aborts in your promise
+ * @param {RejectFunction} reject - the reject function of the promise
+ * @example
+ *
+ * const promise = (signal) => {
+ *  return new Promise((resolve, reject) => {
+ *      abortHandler(signal, reject);
+ *
+ *      setTimeout(resolve, 5000, "resolved");
+ *  });
+ * };
+ *
+ * const callback = (res) {
+ *   // handle res here
+ * }
+ * const errHandler = (err) {
+ *   console.log(err.message) //output: "Aborted"
+ * }
+ *
+ * queue.add(promise, callback, errHandler)
+ */
+export const abortHandler = (signal, reject) => {
+    if (signal.aborted) {
+        return reject(new Error("Aborted"));
+    }
+    const abortHandler = () => {
+        reject(new Error("Aborted"));
+        signal.removeEventListener("abort", abortHandler);
+    };
+    signal.addEventListener("abort", abortHandler);
+};
