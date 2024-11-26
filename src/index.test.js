@@ -47,27 +47,33 @@ describe("AsyncQueue class", () => {
     });
 
     test("should return resolution for successful promise resolution", (done) => {
-        queue.add(testAsync(true), async (res, err) => {
-            try {
-                expect(res).toEqual(enums.RESOLVED);
-                expect(err).toBeNull();
-                done();
-            } catch (err) {
-                done(err);
-            }
-        });
+        queue.add(
+            testAsync(true),
+            async (res) => {
+                try {
+                    expect(res).toEqual(enums.RESOLVED);
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            },
+            async (err) => {
+                done(new Error(err));
+            },
+        );
     });
 
     test("should return rejection for unsuccessful promise resolution", (done) => {
-        queue.add(testAsync(false), async (res, err) => {
-            try {
+        queue.add(
+            testAsync(false),
+            async (res) => {
+                done(new Error(res));
+            },
+            (err) => {
                 expect(err).toEqual(enums.REJECTED);
-                expect(res).toBeNull();
                 done();
-            } catch (err) {
-                done(err);
-            }
-        });
+            },
+        );
     });
 
     describe("timeout", () => {
@@ -85,29 +91,39 @@ describe("AsyncQueue class", () => {
         test("should return a timeout error if a timeout is set and promise took longer than timeout", (done) => {
             queue.setPromiseTimeout(100);
 
-            queue.add(testAsync(true), async (res, err) => {
-                try {
-                    expect(err).toEqual(enums.TIMEOUT);
-                    expect(res).toBeNull();
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            });
+            queue.add(
+                testAsync(true),
+                async (res) => {
+                    done(new Error(res));
+                },
+                (err) => {
+                    try {
+                        expect(err).toEqual(enums.TIMEOUT);
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
+                },
+            );
         });
 
         test("should resolve if a timeout is set and promise resolved before timeout", (done) => {
             queue.setPromiseTimeout(400);
 
-            queue.add(testAsync(true), async (res, err) => {
-                try {
-                    expect(res).toEqual(enums.RESOLVED);
-                    expect(err).toBeNull();
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            });
+            queue.add(
+                testAsync(true),
+                async (res) => {
+                    try {
+                        expect(res).toEqual(enums.RESOLVED);
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
+                },
+                (err) => {
+                    done(new Error(err));
+                },
+            );
         });
     });
 
@@ -127,15 +143,21 @@ describe("AsyncQueue class", () => {
             const testruncount = 10;
 
             for (let i = 0; i < testruncount; i++) {
-                queue.add(testAsync(true), () => {
-                    concurrentRuns--;
-                    try {
-                        expect(concurrentRuns).toBeLessThan(defaultMaxConcurrentRuns);
-                        done();
-                    } catch (err) {
-                        done(err);
-                    }
-                });
+                queue.add(
+                    testAsync(true),
+                    () => {
+                        concurrentRuns--;
+                        try {
+                            expect(concurrentRuns).toBeLessThan(defaultMaxConcurrentRuns);
+                            done();
+                        } catch (err) {
+                            done(err);
+                        }
+                    },
+                    (err) => {
+                        done(new Error(err));
+                    },
+                );
             }
         });
 
@@ -144,15 +166,21 @@ describe("AsyncQueue class", () => {
             queue = new AsyncQueue(maxConcurrentRuns);
 
             for (let i = 0; i < testruncount; i++) {
-                queue.add(testAsync(true), () => {
-                    concurrentRuns--;
-                    try {
-                        expect(concurrentRuns).toBeLessThan(maxConcurrentRuns);
-                        done();
-                    } catch (err) {
-                        done(err);
-                    }
-                });
+                queue.add(
+                    testAsync(true),
+                    () => {
+                        concurrentRuns--;
+                        try {
+                            expect(concurrentRuns).toBeLessThan(maxConcurrentRuns);
+                            done();
+                        } catch (err) {
+                            done(err);
+                        }
+                    },
+                    (err) => {
+                        done(new Error(err));
+                    },
+                );
             }
         });
 
@@ -176,10 +204,10 @@ describe("AsyncQueue class", () => {
     describe("retry on error", () => {
         test("should return an error when input is wrong type or no input is provided to setMaxRetries", () => {
             const typeErr = () => {
-                queue.setRetries("sdf");
+                queue.setMaxRetries("sdf");
             };
             const noInputErr = () => {
-                queue.setRetries();
+                queue.setMaxRetries();
             };
             expect(typeErr).toThrow(typeErrMessage("number"));
             expect(noInputErr).toThrow(enums.INPUTREQUIRED);
@@ -190,40 +218,51 @@ describe("AsyncQueue class", () => {
             const counter = () => {
                 runCount++;
             };
-            queue.add(testAsync(false, counter), (res, err) => {
-                try {
-                    expect(runCount).toEqual(1);
-                    expect(err).toEqual(enums.REJECTED);
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            });
+            queue.add(
+                testAsync(false, counter),
+                (res) => {
+                    done(new Error(res));
+                },
+                (err) => {
+                    try {
+                        expect(runCount).toEqual(1);
+                        expect(err).toEqual(enums.REJECTED);
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
+                },
+            );
         });
 
         test("should retry on error if maxRetries are specified for the specified amount of times", (done) => {
             let runCount = 0;
             const retries = 3;
-            queue.setRetries(retries);
+            queue.setMaxRetries(retries);
             const counter = () => {
                 runCount++;
             };
-            queue.add(testAsync(false, counter), (res, err) => {
-                console.log(err);
-                try {
-                    expect(res).toBeNull();
-                    expect(runCount).toEqual(retries);
-                    expect(err.message).toEqual(enums.MAXRETRIES);
-                    expect(err.cause).toEqual([
-                        enums.REJECTED,
-                        enums.REJECTED,
-                        enums.REJECTED,
-                    ]);
-                    done();
-                } catch (err) {
-                    done(err);
-                }
-            });
+            queue.add(
+                testAsync(false, counter),
+                (res) => {
+                    console.log("returned some how");
+                    done(new Error(res));
+                },
+                (err) => {
+                    try {
+                        expect(runCount).toEqual(retries);
+                        expect(err.message).toEqual(enums.MAXRETRIES);
+                        expect(err.cause).toEqual([
+                            enums.REJECTED,
+                            enums.REJECTED,
+                            enums.REJECTED,
+                        ]);
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
+                },
+            );
         });
     });
 });
