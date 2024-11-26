@@ -184,8 +184,11 @@ describe("retry on error", () => {
                         expect(runCount).toEqual(resolvedRetry);
                         expect(res).toEqual(enums.RESOLVED);
                         resolvedRetry = 3;
-                        fn && fn();
-                        !fn && done();
+                        if (fn) {
+                            fn();
+                        } else {
+                            done();
+                        }
                     } catch (err) {
                         done(err);
                     }
