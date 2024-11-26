@@ -266,10 +266,8 @@ export default class AsyncQueue {
                     this.add(fn, callback, errCallback);
                 }
             });
-        } else {
-            if (errCallback) {
-                errCallback(err);
-            }
+        } else if (errCallback) {
+            errCallback(err);
         }
     }
 }
