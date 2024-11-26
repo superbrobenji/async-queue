@@ -14,12 +14,7 @@
         "node": ">=18.0.0"
     },
     "files": [
-        "./dist/index.d.ts",
-        "./dist/cjs.d.ts",
-        "./dist/index.js",
-        "./dist/cjs.js",
-        "./dist/index.js.map",
-        "./dist/cjs.js.map"
+        "./dist/**/*"
     ],
     "scripts": {
         "test": "bun test --coverage",
