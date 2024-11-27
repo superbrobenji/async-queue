@@ -5,10 +5,18 @@ import inputValidation from "./shared/inputValidation";
  * @namespace AsyncQueue
  */
 
+/**
+ */
+export const QUEUE_ERRORS = {
+    ABORT: "Aborted",
+    INPUT_REQUIRED: "input is required",
+    MAX_RETRIES: "max retries reached",
+};
+
 export default class AsyncQueue {
     #queue = new Set();
     #running = 0;
-    #maxConcurrency = 5;
+    #maxConcurrency = 0;
     #timeout = 0;
     /**
      * @type {RetryEngine| null}
@@ -19,9 +27,10 @@ export default class AsyncQueue {
      * Create a Queue
      *
      * @memberof AsyncQueue
-     * @param {number=} [maxConcurrency] - The max amount of promises to run concurrently
-     * @param {number=} maxRetries - The max amount of promises to run concurrently
-     * @param {number=} timeout - The max amount of time in ms a promise can take to settle
+     * @param {Object} [config] - the config for asyncrify
+     * @param {number=} config.maxConcurrency - The max amount of promises to run concurrently
+     * @param {number=} config.maxRetries - The max amount of promises to run concurrently
+     * @param {number=} config.timeout - The max amount of time in ms a promise can take to settle
      * @example
      *
      * //to define a queue with a default length of 5
@@ -29,17 +38,20 @@ export default class AsyncQueue {
      *
      * @example
      * //to define a queue with a specified length of 3
-     * const queue = new Queue(3)
+     * const queue = new Queue({maxConcurrency: 3})
      */
-    constructor(maxConcurrency, maxRetries, timeout) {
-        inputValidation(maxConcurrency, "number", false);
-        inputValidation(maxRetries, "number", false);
-        inputValidation(timeout, "number", false);
-        if (maxConcurrency) this.#maxConcurrency = maxConcurrency;
-        if (maxRetries) {
-            this.#retryEngine = new RetryEngine(maxRetries);
+    constructor(config) {
+        inputValidation(config, "object", false);
+        if (config) {
+            inputValidation(config.maxConcurrency, "number", false);
+            inputValidation(config.maxRetries, "number", false);
+            inputValidation(config.timeout, "number", false);
+            if (config.maxConcurrency) this.#maxConcurrency = config.maxConcurrency;
+            if (config.maxRetries) {
+                this.#retryEngine = new RetryEngine(config.maxRetries);
+            }
+            if (config.timeout) this.#timeout = config.timeout;
         }
-        if (timeout) this.#timeout = timeout;
     }
 
     /**
@@ -232,7 +244,7 @@ export default class AsyncQueue {
         inputValidation(fn, "function", true);
         inputValidation(callback, "function", true);
 
-        if (this.#running >= this.#maxConcurrency) {
+        if (this.#maxConcurrency !== 0 && this.#running >= this.#maxConcurrency) {
             this.#queue.add(fn);
         } else {
             this.#running++;
