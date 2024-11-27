@@ -31,7 +31,7 @@
     <input type="text" id="nav-search" placeholder="Search" />
     
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/superbrobenji/async-queue" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="AsyncQueue.module.exports.html">AsyncQueue.module.exports</a></li></ul><h3>Namespaces</h3><ul><li><a href="AsyncQueue.html">AsyncQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.add">add</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxConcurrency">setMaxConcurrency</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxRetries">setMaxRetries</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setPromiseTimeout">setPromiseTimeout</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#abortHandler">abortHandler</a></li><li><a href="global.html#errCallback">errCallback</a></li><li><a href="global.html#promiseFunction">promiseFunction</a></li><li><a href="global.html#resCallback">resCallback</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/superbrobenji/async-queue" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><h3>Classes</h3><ul><li><a href="AsyncQueue.module.exports.html">AsyncQueue.module.exports</a></li></ul><h3>Namespaces</h3><ul><li><a href="AsyncQueue.html">AsyncQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.add">add</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxConcurrency">setMaxConcurrency</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setMaxRetries">setMaxRetries</a></li><li data-type='method' style='display: none;'><a href="AsyncQueue.html#.setPromiseTimeout">setPromiseTimeout</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#QUEUE_ERRORS">QUEUE_ERRORS</a></li><li><a href="global.html#abortHandler">abortHandler</a></li><li><a href="global.html#errCallback">errCallback</a></li><li><a href="global.html#promiseFunction">promiseFunction</a></li><li><a href="global.html#resCallback">resCallback</a></li></ul>
     
 </nav>
 
@@ -54,10 +54,18 @@ import inputValidation from "./shared/inputValidation";
  * @namespace AsyncQueue
  */
 
+/**
+ */
+export const QUEUE_ERRORS = {
+    ABORT: "Aborted",
+    INPUT_REQUIRED: "input is required",
+    MAX_RETRIES: "max retries reached",
+};
+
 export default class AsyncQueue {
     #queue = new Set();
     #running = 0;
-    #maxConcurrency = 5;
+    #maxConcurrency = 0;
     #timeout = 0;
     /**
      * @type {RetryEngine| null}
@@ -68,9 +76,10 @@ export default class AsyncQueue {
      * Create a Queue
      *
      * @memberof AsyncQueue
-     * @param {number=} [maxConcurrency] - The max amount of promises to run concurrently
-     * @param {number=} maxRetries - The max amount of promises to run concurrently
-     * @param {number=} timeout - The max amount of time in ms a promise can take to settle
+     * @param {Object} [config] - the config for asyncrify
+     * @param {number=} config.maxConcurrency - The max amount of promises to run concurrently
+     * @param {number=} config.maxRetries - The max amount of promises to run concurrently
+     * @param {number=} config.timeout - The max amount of time in ms a promise can take to settle
      * @example
      *
      * //to define a queue with a default length of 5
@@ -78,17 +87,20 @@ export default class AsyncQueue {
      *
      * @example
      * //to define a queue with a specified length of 3
-     * const queue = new Queue(3)
+     * const queue = new Queue({maxConcurrency: 3})
      */
-    constructor(maxConcurrency, maxRetries, timeout) {
-        inputValidation(maxConcurrency, "number", false);
-        inputValidation(maxRetries, "number", false);
-        inputValidation(timeout, "number", false);
-        if (maxConcurrency) this.#maxConcurrency = maxConcurrency;
-        if (maxRetries) {
-            this.#retryEngine = new RetryEngine(maxRetries);
+    constructor(config) {
+        inputValidation(config, "object", false);
+        if (config) {
+            inputValidation(config.maxConcurrency, "number", false);
+            inputValidation(config.maxRetries, "number", false);
+            inputValidation(config.timeout, "number", false);
+            if (config.maxConcurrency) this.#maxConcurrency = config.maxConcurrency;
+            if (config.maxRetries) {
+                this.#retryEngine = new RetryEngine(config.maxRetries);
+            }
+            if (config.timeout) this.#timeout = config.timeout;
         }
-        if (timeout) this.#timeout = timeout;
     }
 
     /**
@@ -281,7 +293,7 @@ export default class AsyncQueue {
         inputValidation(fn, "function", true);
         inputValidation(callback, "function", true);
 
-        if (this.#running >= this.#maxConcurrency) {
+        if (this.#maxConcurrency !== 0 &amp;&amp; this.#running >= this.#maxConcurrency) {
             this.#queue.add(fn);
         } else {
             this.#running++;
@@ -373,7 +385,7 @@ export const abortHandler = (signal, reject) => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Nov 26 2024 17:05:18 GMT+0200 (South Africa Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Wed Nov 27 2024 14:48:04 GMT+0200 (South Africa Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
