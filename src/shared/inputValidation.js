@@ -10,7 +10,7 @@ const inputValidation = (input, type, required) => {
         throw new SyntaxError("input is required");
     }
     if (input && typeof input !== type) {
-        throw new TypeError(`input must be a ${type}`);
+        throw new TypeError(`input must be a ${type}, but got ${typeof input}`);
     }
 };
 export default inputValidation;

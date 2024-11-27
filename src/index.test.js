@@ -8,10 +8,10 @@ const enums = {
     MAXRETRIES: "max retries reached",
 };
 
-const typeErrMessage = (type) => `input must be a ${type}`;
+const typeErrMessage = (type, passedType) =>
+    `input must be a ${type}, but got ${passedType}`;
 
 const maxConcurrentRuns = 3;
-const defaultMaxConcurrentRuns = 5;
 let concurrentRuns = 0;
 let queue;
 
@@ -54,12 +54,20 @@ describe("AsyncQueue class", () => {
     beforeEach(beforeFunc);
     afterEach(afterFunc);
 
+    test("should throw Type error when wrong type is passed to config", () => {
+        const typeErr = () => {
+            return new AsyncQueue({ maxConcurrency: "dsf" });
+        };
+        expect(typeErr).toThrow(TypeError);
+        expect(typeErr).toThrow(typeErrMessage("number", "string"));
+    });
+
     test("should throw Type error when wrong type is passed to constructor", () => {
         const typeErr = () => {
             return new AsyncQueue("dsf");
         };
         expect(typeErr).toThrow(TypeError);
-        expect(typeErr).toThrow(typeErrMessage("number"));
+        expect(typeErr).toThrow(typeErrMessage("object", "string"));
     });
 
     test("should return resolution for successful promise resolution", (done) => {
@@ -105,7 +113,7 @@ describe("retry on error", () => {
             queue.setMaxRetries();
         };
         expect(typeErr).toThrow(TypeError);
-        expect(typeErr).toThrow(typeErrMessage("number"));
+        expect(typeErr).toThrow(typeErrMessage("number", "string"));
         expect(noInputErr).toThrow(SyntaxError);
         expect(noInputErr).toThrow(enums.INPUTREQUIRED);
     });
@@ -244,12 +252,12 @@ describe("concurrency", () => {
             queue.setMaxConcurrency();
         };
         expect(typeErr).toThrow(TypeError);
-        expect(typeErr).toThrow(typeErrMessage("number"));
+        expect(typeErr).toThrow(typeErrMessage("number", "string"));
         expect(noInputErr).toThrow(SyntaxError);
         expect(noInputErr).toThrow(enums.INPUTREQUIRED);
     });
 
-    test(`should only run ${defaultMaxConcurrentRuns} max concurrent promises by default`, (done) => {
+    test(`should throttle promises by default`, (done) => {
         const testruncount = 10;
 
         for (let i = 0; i < testruncount; i++) {
@@ -258,7 +266,7 @@ describe("concurrency", () => {
                 () => {
                     concurrentRuns--;
                     try {
-                        expect(concurrentRuns).toBeLessThan(defaultMaxConcurrentRuns);
+                        expect(concurrentRuns).toBeLessThan(testruncount);
                         done();
                     } catch (err) {
                         done(err);
@@ -273,7 +281,7 @@ describe("concurrency", () => {
 
     test(`should only run ${maxConcurrentRuns} max concurrent promises by when specified from constructor`, (done) => {
         const testruncount = 7;
-        queue = new AsyncQueue(maxConcurrentRuns);
+        queue = new AsyncQueue({ maxConcurrency: maxConcurrentRuns });
 
         for (let i = 0; i < testruncount; i++) {
             queue.add(
@@ -324,7 +332,7 @@ describe("Timeout", () => {
             queue.setPromiseTimeout();
         };
         expect(typeErr).toThrow(TypeError);
-        expect(typeErr).toThrow(typeErrMessage("number"));
+        expect(typeErr).toThrow(typeErrMessage("number", "string"));
         expect(noInputErr).toThrow(SyntaxError);
         expect(noInputErr).toThrow(enums.INPUTREQUIRED);
     });

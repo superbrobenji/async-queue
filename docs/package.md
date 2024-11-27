@@ -8,6 +8,8 @@
 ## Constants
 
 <dl>
+<dt><a href="#QUEUE_ERRORS">QUEUE_ERRORS</a></dt>
+<dd></dd>
 <dt><a href="#abortHandler">abortHandler</a></dt>
 <dd><p>abort handler for handling aborts in your promise</p>
 </dd>
@@ -31,7 +33,7 @@
 
 * [AsyncQueue](#AsyncQueue) : <code>object</code>
     * [.module.exports](#AsyncQueue.module.exports)
-        * [new module.exports([maxConcurrency], [maxRetries], [timeout])](#new_AsyncQueue.module.exports_new)
+        * [new module.exports([config])](#new_AsyncQueue.module.exports_new)
     * [.setMaxConcurrency(maxConcurrency)](#AsyncQueue.setMaxConcurrency)
     * [.setMaxRetries(maxRetries)](#AsyncQueue.setMaxRetries)
     * [.setPromiseTimeout(timeout)](#AsyncQueue.setPromiseTimeout)
@@ -43,15 +45,16 @@
 **Kind**: static class of [<code>AsyncQueue</code>](#AsyncQueue)  
 <a name="new_AsyncQueue.module.exports_new"></a>
 
-#### new module.exports([maxConcurrency], [maxRetries], [timeout])
+#### new module.exports([config])
 Create a Queue
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [maxConcurrency] | <code>number</code> | The max amount of promises to run concurrently |
-| [maxRetries] | <code>number</code> | The max amount of promises to run concurrently |
-| [timeout] | <code>number</code> | The max amount of time in ms a promise can take to settle |
+| [config] | <code>Object</code> | the config for asyncrify |
+| [config.maxConcurrency] | <code>number</code> | The max amount of promises to run concurrently |
+| [config.maxRetries] | <code>number</code> | The max amount of promises to run concurrently |
+| [config.timeout] | <code>number</code> | The max amount of time in ms a promise can take to settle |
 
 **Example**  
 ```js
@@ -61,7 +64,7 @@ const queue = new Queue()
 **Example**  
 ```js
 //to define a queue with a specified length of 3
-const queue = new Queue(3)
+const queue = new Queue({maxConcurrency: 3})
 ```
 <a name="AsyncQueue.setMaxConcurrency"></a>
 
@@ -194,6 +197,10 @@ const error = (err) => {
 //Adding the promise to the queue
 queue.add(pets, callback, error)
 ```
+<a name="QUEUE_ERRORS"></a>
+
+## QUEUE\_ERRORS
+**Kind**: global constant  
 <a name="abortHandler"></a>
 
 ## abortHandler
