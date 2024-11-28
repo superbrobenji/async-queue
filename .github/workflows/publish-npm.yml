@@ -21,7 +21,7 @@ jobs:
       - name: "Check file existence"
         uses: andstor/file-existence-action@v3
         with:
-          files: "dist/index.js, dist/cjs.js, dist/cjs.js.map, dist/index.d.ts, dist/index.d.ts.map, dist/index.js.map "
+          files: "dist/index.mjs, dist/index.cjs, dist/index.cjs.map, dist/index.d.ts, dist/index.d.ts.map, dist/index.mjs.map "
           fail: true
       - uses: actions/setup-node@v4
         with:
