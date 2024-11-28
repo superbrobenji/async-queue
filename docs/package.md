@@ -210,6 +210,7 @@ abort handler for handling aborts in your promise
 
 | Param | Type | Description |
 | --- | --- | --- |
+| signal | <code>AbortSignal</code> | the reject function of the promise |
 | reject | <code>RejectFunction</code> | the reject function of the promise |
 
 **Example**  
