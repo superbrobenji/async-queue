@@ -13,7 +13,7 @@ export const QUEUE_ERRORS = {
     MAX_RETRIES: "max retries reached",
 };
 
-export default class AsyncQueue {
+export class Queue {
     #queue = new Set();
     #running = 0;
     #maxConcurrency = 0;
@@ -292,6 +292,7 @@ export default class AsyncQueue {
 
 /**
  * abort handler for handling aborts in your promise
+ * @param {AbortSignal} signal - the reject function of the promise
  * @param {RejectFunction} reject - the reject function of the promise
  * @example
  *
@@ -322,3 +323,5 @@ export const abortHandler = (signal, reject) => {
     };
     signal.addEventListener("abort", abortHandler);
 };
+
+export default Queue;

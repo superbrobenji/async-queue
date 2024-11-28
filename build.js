@@ -10,12 +10,13 @@ const option = {
 (async () => {
     await Bun.build({
         format: "esm",
+        naming: "index.mjs",
         ...option,
     }).catch(() => process.exit(1));
 
     await Bun.build({
         format: "cjs",
-        naming: "cjs.js",
+        naming: "index.cjs",
         ...option,
     }).catch(() => process.exit(1));
 })();
