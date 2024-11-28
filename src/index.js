@@ -292,6 +292,7 @@ export default class AsyncQueue {
 
 /**
  * abort handler for handling aborts in your promise
+ * @param {AbortSignal} signal - the reject function of the promise
  * @param {RejectFunction} reject - the reject function of the promise
  * @example
  *
