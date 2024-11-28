@@ -32,20 +32,20 @@
 **Kind**: global namespace  
 
 * [AsyncQueue](#AsyncQueue) : <code>object</code>
-    * [.module.exports](#AsyncQueue.module.exports)
-        * [new module.exports([config])](#new_AsyncQueue.module.exports_new)
-    * [.setMaxConcurrency(maxConcurrency)](#AsyncQueue.setMaxConcurrency)
-    * [.setMaxRetries(maxRetries)](#AsyncQueue.setMaxRetries)
-    * [.setPromiseTimeout(timeout)](#AsyncQueue.setPromiseTimeout)
-    * [.add(fn, callback, callback)](#AsyncQueue.add)
+    * [.exports.Queue](#AsyncQueue.exports.Queue)
+        * [new exports.Queue([config])](#new_AsyncQueue.exports.Queue_new)
+    * [.Queue#setMaxConcurrency(maxConcurrency)](#AsyncQueue.Queue+setMaxConcurrency)
+    * [.Queue#setMaxRetries(maxRetries)](#AsyncQueue.Queue+setMaxRetries)
+    * [.Queue#setPromiseTimeout(timeout)](#AsyncQueue.Queue+setPromiseTimeout)
+    * [.Queue#add(fn, callback, callback)](#AsyncQueue.Queue+add)
 
-<a name="AsyncQueue.module.exports"></a>
+<a name="AsyncQueue.exports.Queue"></a>
 
-### AsyncQueue.module.exports
+### AsyncQueue.exports.Queue
 **Kind**: static class of [<code>AsyncQueue</code>](#AsyncQueue)  
-<a name="new_AsyncQueue.module.exports_new"></a>
+<a name="new_AsyncQueue.exports.Queue_new"></a>
 
-#### new module.exports([config])
+#### new exports.Queue([config])
 Create a Queue
 
 
@@ -66,9 +66,9 @@ const queue = new Queue()
 //to define a queue with a specified length of 3
 const queue = new Queue({maxConcurrency: 3})
 ```
-<a name="AsyncQueue.setMaxConcurrency"></a>
+<a name="AsyncQueue.Queue+setMaxConcurrency"></a>
 
-### AsyncQueue.setMaxConcurrency(maxConcurrency)
+### AsyncQueue.Queue#setMaxConcurrency(maxConcurrency)
 Set the max amount of promises to run concurrently after queue initialization
 
 **Kind**: static method of [<code>AsyncQueue</code>](#AsyncQueue)  
@@ -77,9 +77,9 @@ Set the max amount of promises to run concurrently after queue initialization
 | --- | --- | --- |
 | maxConcurrency | <code>number</code> | The max amount of promises to run concurrently |
 
-<a name="AsyncQueue.setMaxRetries"></a>
+<a name="AsyncQueue.Queue+setMaxRetries"></a>
 
-### AsyncQueue.setMaxRetries(maxRetries)
+### AsyncQueue.Queue#setMaxRetries(maxRetries)
 Set the max amount of times a promise can be retried after a failure
 By default the queue will not retry a failed promise.
 
@@ -113,9 +113,9 @@ const errCallback = ( err) => {
 
 queue.add(pets, callback, errCallback)
 ```
-<a name="AsyncQueue.setPromiseTimeout"></a>
+<a name="AsyncQueue.Queue+setPromiseTimeout"></a>
 
-### AsyncQueue.setPromiseTimeout(timeout)
+### AsyncQueue.Queue#setPromiseTimeout(timeout)
 Set the max amount of time a promise can take to settle
 By default the queue will not monitor the promise time to settle
 a signal must be handled in the promise for the timeout to abort the promise
@@ -160,9 +160,9 @@ console.log(err) //output: "Request timed out"
 //Adding the promise to the queue
 queue.add(pets, callback, errCallback)
 ```
-<a name="AsyncQueue.add"></a>
+<a name="AsyncQueue.Queue+add"></a>
 
-### AsyncQueue.add(fn, callback, callback)
+### AsyncQueue.Queue#add(fn, callback, callback)
 Add an function to the queue
 Takes in a function that returns a Promise
 
