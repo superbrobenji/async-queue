@@ -36,6 +36,7 @@ jobs:
           fi
             echo "PRs to cherry-pick:"
             echo "$PR_LIST"
+            echo "pr_list=$PR_LIST >> "$GITHUB_OUTPUT"
       - name: Create new branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,6 +46,7 @@ jobs:
           git checkout ${{ inputs.target_branch }}
           git checkout -b $NEW_BRANCH
           git push -u origin $NEW_BRANCH
+          echo "new_branch=$NEW_BRANCH" >> "$GITHUB_OUTPUT"
       - name: Cherry-pick PRs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,7 +59,7 @@ jobs:
           done
       - name: Push new branch
         run: |
-          git push -u origin ${{ steps.create_branch.outputs.new_branch }}
+          git push ${{ steps.create_branch.outputs.new_branch }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         env:
