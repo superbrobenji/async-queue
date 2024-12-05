@@ -29,18 +29,14 @@ jobs:
         id: fetch_prs
         run: |
           PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommit \
-          --jq '.[] | select(.milestone.title == "${{ inputs.milestone }}") | .mergeCommit')
+          --jq '[.[] | select(.milestone.title == "${{ inputs.milestone }}") | .mergeCommit]')
           if [ -z "$PR_LIST" ]; then
             echo "No PRs found with milestone ${{ inputs.milestone }}"
             exit 1
           fi
             echo "PRs to cherry-pick:"
             echo "$PR_LIST"
-            {
-              echo "pr_list<<EOF"
-              echo "$PR_LIST"
-              echo EOF
-            } >> "$GITHUB_OUTPUT"
+            echo "pr_list=$PR_LIST" >> "$GITHUB_OUTPUT"
       - name: Create new branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
