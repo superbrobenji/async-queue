@@ -26,29 +26,29 @@ jobs:
       - name: Get PRs with Milestone
         id: fetch_prs
         run: |
-          PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommitSha \ 
-          --jq ".[] | select(.milestone.title == '${{ inputs.milestone }}') | .mergeCommitSha") 
+          PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommitSha \
+          --jq ".[] | select(.milestone.title == '${{ inputs.milestone }}') | .mergeCommitSha")
           if [ -z "$PR_LIST" ]; then
-            echo "No PRs found with milestone ${{ inputs.milestone }}" 
-            exit 1 
-          fi 
-            echo "PRs to cherry-pick:" 
-            echo "$PR_LIST" 
+            echo "No PRs found with milestone ${{ inputs.milestone }}"
+            exit 1
+          fi
+            echo "PRs to cherry-pick:"
+            echo "$PR_LIST"
             echo "::set-output name=pr_list::$PR_LIST"
       - name: Create new branch
         id: create_branch
         run: |
-          NEW_BRANCH="cherry-pick-${{ inputs.milestone }}-$(date +'%Y%m%d%H%M%S')" 
-          git checkout ${{ inputs.target_branch }} 
-          git checkout -b $NEW_BRANCH 
+          NEW_BRANCH="cherry-pick-${{ inputs.milestone }}-$(date +'%Y%m%d%H%M%S')"
+          git checkout ${{ inputs.target_branch }}
+          git checkout -b $NEW_BRANCH
           echo "::set-output name=new_branch::$NEW_BRANCH"
       - name: Cherry-pick PRs
         run: |
           for COMMIT in ${{ steps.fetch_prs.outputs.pr_list }}; do
-            echo "Cherry-picking commit $COMMIT..." git cherry-pick $COMMIT || { 
-            echo "Conflict occurred. Aborting."; 
-            git cherry-pick --abort; 
-            exit 1; } 
+            echo "Cherry-picking commit $COMMIT..." git cherry-pick $COMMIT || {
+            echo "Conflict occurred. Aborting.";
+            git cherry-pick --abort;
+            exit 1; }
           done
       - name: Push new branch
         run: |
