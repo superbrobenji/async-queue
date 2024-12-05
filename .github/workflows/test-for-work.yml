@@ -1,0 +1,63 @@
+name: Cherry-Pick PRs by Milestone
+on:
+  workflow_dispatch:
+    inputs:
+      milestone:
+        description: "The milestone to filter PRs by"
+        required: true
+        default: "v1.0"
+      target_branch:
+        description: "The branch to base the new branch on (e.g., staging)"
+        required: true
+        default: "staging"
+
+jobs:
+  cherry-pick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]" 
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Get PRs with Milestone
+        id: fetch_prs
+        run: |
+          PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommitSha \ i
+          --jq ".[] | select(.milestone.title == '${{ inputs.milestone }}') | .mergeCommitSha") 
+          if [ -z "$PR_LIST" ]; then
+            echo "No PRs found with milestone ${{ inputs.milestone }}" 
+            exit 1 
+          fi 
+            echo "PRs to cherry-pick:" 
+            echo "$PR_LIST" 
+            echo "::set-output name=pr_list::$PR_LIST"
+      - name: Create new branch
+        id: create_branch
+        run: |
+          NEW_BRANCH="cherry-pick-${{ inputs.milestone }}-$(date +'%Y%m%d%H%M%S')" 
+          git checkout ${{ inputs.target_branch }} 
+          git checkout -b $NEW_BRANCH 
+          echo "::set-output name=new_branch::$NEW_BRANCH"
+      - name: Cherry-pick PRs
+        run: |
+          for COMMIT in ${{ steps.fetch_prs.outputs.pr_list }}; do
+            echo "Cherry-picking commit $COMMIT..." git cherry-pick $COMMIT || { 
+            echo "Conflict occurred. Aborting."; 
+            git cherry-pick --abort; 
+            exit 1; } 
+          done
+      - name: Push new branch
+        run: |
+          git push origin ${{ steps.create_branch.outputs.new_branch }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: ${{ inputs.target_branch }}
+          head: ${{ steps.create_branch.outputs.new_branch }}
+          title: "Cherry-pick PRs for Milestone: ${{ inputs.milestone }}"
+          body: "This PR cherry-picks the following commits into the ${{ inputs.target_branch }} branch:\n\n${{ steps.fetch_prs.outputs.pr_list }}"

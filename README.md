@@ -3,7 +3,7 @@
   <a href="https://www.npmjs.com/package/asyncrify" target="_blank">
     <img alt="Version" src="https://img.shields.io/npm/v/asyncrify.svg">
   </a>
-  <a href="https://github.com/superbrobenji/async-queue/blob/main/docs/package.md" target="_blank">
+  <a href="https://superbrobenji.github.io/async-queue/" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://github.com/superbrobenji/async-queue/graphs/commit-activity" target="_blank">
