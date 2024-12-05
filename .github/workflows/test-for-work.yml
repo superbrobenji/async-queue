@@ -24,6 +24,8 @@ jobs:
           git config --global user.name "github-actions[bot]" 
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: Get PRs with Milestone
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: fetch_prs
         run: |
           PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommitSha \
@@ -36,6 +38,8 @@ jobs:
             echo "$PR_LIST"
             echo "::set-output name=pr_list::$PR_LIST"
       - name: Create new branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: create_branch
         run: |
           NEW_BRANCH="cherry-pick-${{ inputs.milestone }}-$(date +'%Y%m%d%H%M%S')"
@@ -43,6 +47,8 @@ jobs:
           git checkout -b $NEW_BRANCH
           echo "::set-output name=new_branch::$NEW_BRANCH"
       - name: Cherry-pick PRs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for COMMIT in ${{ steps.fetch_prs.outputs.pr_list }}; do
             echo "Cherry-picking commit $COMMIT..." git cherry-pick $COMMIT || {
@@ -55,6 +61,8 @@ jobs:
           git push origin ${{ steps.create_branch.outputs.new_branch }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: ${{ inputs.target_branch }}
