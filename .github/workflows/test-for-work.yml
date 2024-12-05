@@ -36,9 +36,11 @@ jobs:
           fi
             echo "PRs to cherry-pick:"
             echo "$PR_LIST"
-            echo "pr_list<<$EOF" >> "$GITHUB_OUTPUT"
-            echo "$PR_LIST" >> "$GITHUB_OUTPUT"
-            echo "$EOF" >> "$GITHUB_OUTPUT"
+            {
+              echo "pr_list<<EOF"
+              echo "$PR_LIST"
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
       - name: Create new branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
