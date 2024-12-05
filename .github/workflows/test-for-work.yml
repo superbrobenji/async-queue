@@ -59,7 +59,7 @@ jobs:
           done
       - name: Push new branch
         run: |
-          git push ${{ steps.create_branch.outputs.new_branch }}
+          git push origin ${{ steps.create_branch.outputs.new_branch }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         env:
