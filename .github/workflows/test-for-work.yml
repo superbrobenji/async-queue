@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: fetch_prs
         run: |
-          PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommitSha \
+          PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommit \
           --jq ".[] | select(.milestone.title == '${{ inputs.milestone }}') | .mergeCommitSha")
           if [ -z "$PR_LIST" ]; then
             echo "No PRs found with milestone ${{ inputs.milestone }}"
