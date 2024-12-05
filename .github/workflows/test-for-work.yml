@@ -36,7 +36,7 @@ jobs:
           fi
             echo "PRs to cherry-pick:"
             echo "$PR_LIST"
-            echo "::set-output name=pr_list::$PR_LIST"
+            echo "pr_list=$PR_LIST" >> $GITHUB_OUTPUT
       - name: Create new branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,7 +45,7 @@ jobs:
           NEW_BRANCH="cherry-pick-${{ inputs.milestone }}-$(date +'%Y%m%d%H%M%S')"
           git checkout ${{ inputs.target_branch }}
           git checkout -b $NEW_BRANCH
-          echo "::set-output name=new_branch::$NEW_BRANCH"
+          echo "new_branch=$NEW_BRANCH" >> $GITHUB_OUTPUT
       - name: Cherry-pick PRs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
