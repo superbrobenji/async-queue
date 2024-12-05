@@ -52,10 +52,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for COMMIT in ${{ steps.fetch_prs.outputs.pr_list }}; do
-            echo "Cherry-picking commit $COMMIT..." git cherry-pick $COMMIT || {
-            echo "Conflict occurred. Aborting.";
-            git cherry-pick --abort;
-            exit 1; }
+            echo "Cherry-picking commit $COMMIT..." 
+            git cherry-pick $COMMIT ||
+            {
+              echo "Conflict occurred. Aborting.";
+              git cherry-pick --abort;
+              exit 1; 
+            }
           done
       - name: Push new branch
         run: |
