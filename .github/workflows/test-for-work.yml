@@ -44,6 +44,7 @@ jobs:
           NEW_BRANCH="cherry-pick-${{ inputs.milestone }}-$(date +'%Y%m%d%H%M%S')"
           git checkout ${{ inputs.target_branch }}
           git checkout -b $NEW_BRANCH
+          git push -u origin ${{ inputs.target_branch }}
       - name: Cherry-pick PRs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
