@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: fetch_prs
         run: |
-          PR_LIST=$(gh pr list --state closed --json mergeCommit,milestone \
+          PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommit \
           --jq '[.[] | select(.milestone.title == "${{ inputs.milestone }}") | .mergeCommit]')
           if [ -z "$PR_LIST" ]; then
             echo "No PRs found with milestone ${{ inputs.milestone }}"
@@ -51,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for COMMIT in ${{ steps.fetch_prs.outputs.pr_list }}; do
+          for COMMIT in $(echo ${{ steps.fetch_prs.outputs.pr_list }} | jq -r '.[]') ; do
             echo "Cherry-picking commit $COMMIT..." 
             git cherry-pick -m $COMMIT ||
             {
