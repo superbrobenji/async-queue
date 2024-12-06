@@ -58,7 +58,7 @@ jobs:
           echo "exported list: $DECODED_PR_LIST"
           echo "$DECODED_PR_LIST" | jq -r '.[]' | while read -r COMMIT; do
             echo "Cherry-picking commit $COMMIT..." 
-            git cherry-pick -m $COMMIT ||
+            git cherry-pick -m 1 $COMMIT ||
             {
               echo "Conflict occurred. Aborting.";
               git cherry-pick --abort;
