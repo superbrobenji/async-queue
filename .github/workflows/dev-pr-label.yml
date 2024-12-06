@@ -29,7 +29,7 @@ jobs:
           PR_MILESTONE=$(gh pr view ${{ github.event.pull_request.number }} --json milestone --jq '.milestone.title' || echo "null")
 
           # If the milestone is null, fail the workflow
-          if [ "$PR_MILESTONE" == "null" ]; then
+          if [ "$PR_MILESTONE" == "" ]; then
             echo "❌ The pull request does not have a milestone assigned."
             exit 1
           fi
