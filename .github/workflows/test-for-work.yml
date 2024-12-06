@@ -51,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for COMMIT in $(jq '.oid.values | keys | .[]' <<< ${{ steps.fetch_prs.outputs.pr_list }}); do
+          for COMMIT in $(jq -r '.[]' <<< "${{ steps.fetch_prs.outputs.pr_list }}"); do
             echo "Cherry-picking commit $COMMIT..." 
             git cherry-pick -m $COMMIT ||
             {
