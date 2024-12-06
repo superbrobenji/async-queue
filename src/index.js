@@ -94,14 +94,7 @@ export class Queue {
      *
      * queue.add(pets, callback, errCallback)
      */
-    setMaxRetries(maxRetries) {
-        inputValidation(maxRetries, "number", true);
-        if (!this.#retryEngine) {
-            this.#retryEngine = new RetryEngine(maxRetries);
-        } else {
-            this.#retryEngine.setRetries(maxRetries);
-        }
-    }
+    setMaxRetries(maxRetries) { }
 
     /**
      * Set the max amount of time a promise can take to settle
