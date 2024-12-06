@@ -14,6 +14,9 @@ on:
 jobs:
   cherry-pick:
     runs-on: ubuntu-latest
+    permissions:
+          contents: write
+          pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,8 +42,6 @@ jobs:
             echo "$ENCODED_PR_LIST"
             echo "pr_list=$ENCODED_PR_LIST" >> "$GITHUB_OUTPUT"
       - name: Create new branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: create_branch
         run: |
           NEW_BRANCH="cherry-pick-${{ inputs.milestone }}-$(date +'%Y%m%d%H%M%S')"
@@ -49,8 +50,6 @@ jobs:
           git push -u origin $NEW_BRANCH
           echo "new_branch=$NEW_BRANCH" >> "$GITHUB_OUTPUT"
       - name: Cherry-pick PRs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Received PR_LIST: ${{ steps.fetch_prs.outputs.pr_list }}"
           PR_LIST="${{ steps.fetch_prs.outputs.pr_list }}"
@@ -67,15 +66,12 @@ jobs:
           done
       - name: Push new branch
         run: |
+          echo ${{ steps.create_branch.outputs.new_branch }}
           git push origin ${{ steps.create_branch.outputs.new_branch }}
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: ${{ inputs.target_branch }}
-          branch: ${{ steps.create_branch.outputs.new_branch }}
-          delete-branch: true
-          title: "Cherry-pick PRs for Milestone: ${{ inputs.milestone }}"
-          body: "This PR cherry-picks the following commits into the ${{ inputs.target_branch }} branch:\n\n${{ steps.fetch_prs.outputs.pr_list }}"
+        run: |
+          gh pr create --base ${{ inputs.target_branch }} --head ${{ steps.create_branch.outputs.new_branch }} -t "Cherry-pick PRs for Milestone: ${{ inputs.milestone }}" -b "This PR cherry-picks the following commits into the ${{ inputs.target_branch }} branch: ${{ steps.fetch_prs.outputs.pr_list }}"
+
+   
