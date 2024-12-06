@@ -5,11 +5,11 @@ on:
       milestone:
         description: "The milestone to filter PRs by"
         required: true
-        default: "v1.0"
+        default: "tst"
       target_branch:
         description: "The branch to base the new branch on (e.g., staging)"
         required: true
-        default: "staging"
+        default: "main"
 
 jobs:
   cherry-pick:
@@ -34,9 +34,10 @@ jobs:
             echo "No PRs found with milestone ${{ inputs.milestone }}"
             exit 1
           fi
+            ENCODED_PR_LIST=$(printf '%s' "$PR_LIST" | jq -Rr @json)
             echo "PRs to cherry-pick:"
-            echo "$PR_LIST"
-            echo "pr_list=$PR_LIST" >> "$GITHUB_OUTPUT"
+            echo "$ENCODED_PR_LIST"
+            echo "pr_list=$ENCODED_PR_LIST" >> "$GITHUB_OUTPUT"
       - name: Create new branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,11 +52,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "Received PR_LIST: ${{ steps.fetch_prs.outputs.pr_list }}"
           PR_LIST="${{ steps.fetch_prs.outputs.pr_list }}"
-          echo "$PR_LIST"
-          echo "$PR_LIST" | jq -r '.[]' | while read -r COMMIT; do
+          DECODED_PR_LIST=$(echo "$PR_LIST" | jq -r)
+          echo "exported list: $DECODED_PR_LIST"
+          echo "$DECODED_PR_LIST" | jq -r '.[]' | while read -r COMMIT; do
             echo "Cherry-picking commit $COMMIT..." 
-            git cherry-pick -m $COMMIT ||
+            git cherry-pick -m 1 $COMMIT ||
             {
               echo "Conflict occurred. Aborting.";
               git cherry-pick --abort;
@@ -66,12 +69,13 @@ jobs:
         run: |
           git push origin ${{ steps.create_branch.outputs.new_branch }}
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: ${{ inputs.target_branch }}
-          head: ${{ steps.create_branch.outputs.new_branch }}
+          branch: ${{ steps.create_branch.outputs.new_branch }}
+          delete-branch: true
           title: "Cherry-pick PRs for Milestone: ${{ inputs.milestone }}"
           body: "This PR cherry-picks the following commits into the ${{ inputs.target_branch }} branch:\n\n${{ steps.fetch_prs.outputs.pr_list }}"
