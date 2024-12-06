@@ -69,6 +69,8 @@ jobs:
           echo ${{ steps.create_branch.outputs.new_branch }}
           git push origin ${{ steps.create_branch.outputs.new_branch }}
       - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --base ${{ inputs.target_branch }} --head ${{ steps.create_branch.outputs.new_branch }} -t "Cherry-pick PRs for Milestone: ${{ inputs.milestone }}" -b "This PR cherry-picks the following commits into the ${{ inputs.target_branch }} branch: ${{ steps.fetch_prs.outputs.pr_list }}"
 
