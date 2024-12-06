@@ -76,6 +76,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: ${{ inputs.target_branch }}
           branch: ${{ steps.create_branch.outputs.new_branch }}
-          delete-branch: true
+          delete-branch: false
           title: "Cherry-pick PRs for Milestone: ${{ inputs.milestone }}"
           body: "This PR cherry-picks the following commits into the ${{ inputs.target_branch }} branch:\n\n${{ steps.fetch_prs.outputs.pr_list }}"
