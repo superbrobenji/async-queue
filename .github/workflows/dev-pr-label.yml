@@ -8,6 +8,8 @@ on:
       - synchronize
       - labeled
       - unlabeled
+      - milestoned
+      - demilestoned
 jobs:
   check_labels:
     name: "Check Dev PR Labels"
