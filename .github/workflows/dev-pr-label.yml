@@ -26,13 +26,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Get the PR information
-          PR_DATA=$(gh pr view ${{ github.event.pull_request.number }} --json milestone --jq '.milestone')
+          PR_MILESTONE=$(gh pr view ${{ github.event.pull_request.number }} --json milestone --jq '.milestone.title' || echo "null")
 
           # If the milestone is null, fail the workflow
-          if [ "$PR_DATA" == "null" ]; then
+          if [ "$PR_MILESTONE" == "null" ]; then
             echo "❌ The pull request does not have a milestone assigned."
             exit 1
           fi
-
+          
           # Output the milestone if it exists
-          echo "✅ The pull request has a milestone assigned: $PR_DATA."
+          echo "✅ The pull request has a milestone assigned: $PR_MILESTONE."
