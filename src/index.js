@@ -40,7 +40,19 @@ export class Queue {
      * //to define a queue with a specified length of 3
      * const queue = new Queue({maxConcurrency: 3})
      */
-    constructor(config) { }
+    constructor(config) {
+        inputValidation(config, "object", false);
+        if (config) {
+            inputValidation(config.maxConcurrency, "number", false);
+            inputValidation(config.maxRetries, "number", false);
+            inputValidation(config.timeout, "number", false);
+            if (config.maxConcurrency) this.#maxConcurrency = config.maxConcurrency;
+            if (config.maxRetries) {
+                this.#retryEngine = new RetryEngine(config.maxRetries);
+            }
+            if (config.timeout) this.#timeout = config.timeout;
+        }
+    }
 
     /**
      * Set the max amount of promises to run concurrently after queue initialization

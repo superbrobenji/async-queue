@@ -356,4 +356,23 @@ describe("Timeout", () => {
             },
         );
     });
+
+    test("should resolve if a timeout is set and promise resolved before timeout", (done) => {
+        queue.setPromiseTimeout(400);
+
+        queue.add(
+            testAsync(true),
+            async (res) => {
+                try {
+                    expect(res).toEqual(enums.RESOLVED);
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            },
+            (err) => {
+                done(new Error(err));
+            },
+        );
+    });
 });
