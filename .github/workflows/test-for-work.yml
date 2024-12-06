@@ -51,9 +51,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "Received PR_LIST: ${{ steps.fetch_prs.outputs.pr_list }}"
           PR_LIST="${{ steps.fetch_prs.outputs.pr_list }}"
-          echo '%s\n' "$PR_LIST"
-          echo '%s\n' "$PR_LIST" | jq -r '.[]' | while read -r COMMIT; do
+          echo "exported list: $PR_LIST"
+          echo "$PR_LIST" | jq -r '.[]' | while read -r COMMIT; do
             echo "Cherry-picking commit $COMMIT..." 
             git cherry-pick -m $COMMIT ||
             {
