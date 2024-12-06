@@ -29,7 +29,7 @@ jobs:
         id: fetch_prs
         run: |
           PR_LIST=$(gh pr list --state closed --json number,milestone,mergeCommit \
-          --jq '[.[] | select(.milestone.title == "${{ inputs.milestone }}") | .mergeCommit]')
+          --jq '[.[] | select(.milestone.title == "${{ inputs.milestone }}") | .mergeCommit.oid]')
           if [ -z "$PR_LIST" ]; then
             echo "No PRs found with milestone ${{ inputs.milestone }}"
             exit 1
