@@ -5,11 +5,11 @@ on:
       milestone:
         description: "The milestone to filter PRs by"
         required: true
-        default: "v1.0"
+        default: "tst"
       target_branch:
         description: "The branch to base the new branch on (e.g., staging)"
         required: true
-        default: "staging"
+        default: "main"
 
 jobs:
   cherry-pick:
@@ -52,8 +52,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_LIST="${{ steps.fetch_prs.outputs.pr_list }}"
-          echo "$PR_LIST"
-          echo "$PR_LIST" | jq -r '.[]' | while read -r COMMIT; do
+          echo '%s\n' "$PR_LIST"
+          echo '%s\n' "$PR_LIST" | jq -r '.[]' | while read -r COMMIT; do
             echo "Cherry-picking commit $COMMIT..." 
             git cherry-pick -m $COMMIT ||
             {
