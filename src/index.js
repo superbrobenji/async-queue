@@ -73,12 +73,7 @@ export class Queue {
      * @param {number} maxRetries - The max amount of promises to run concurrently
      *@example
      * const queue = new Queue()
-     *
      * //setting retries to 3
-     * queue.setRetries(3)
-     *
-     * const pets = () =>{
-     *   return new Promise((resolve, reject) =>{
      *     setTimeout(reject('rejected'), 100)
      *   })
      * }
@@ -94,14 +89,7 @@ export class Queue {
      *
      * queue.add(pets, callback, errCallback)
      */
-    setMaxRetries(maxRetries) {
-        inputValidation(maxRetries, "number", true);
-        if (!this.#retryEngine) {
-            this.#retryEngine = new RetryEngine(maxRetries);
-        } else {
-            this.#retryEngine.setRetries(maxRetries);
-        }
-    }
+    setMaxRetries(maxRetries) { }
 
     /**
      * Set the max amount of time a promise can take to settle
